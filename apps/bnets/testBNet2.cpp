@@ -5,18 +5,6 @@
 #ifndef BC_BAYESIAN_NETWORK_HPP
 #define BC_BAYESIAN_NETWORK_HPP
 
-// #include <cstdlib>
-// #include <cassert>
-// #include <cstring>
-// #include <fstream>
-// #include <sstream>
-// #include <iostream>
-// #include <vector>
-// #include <string>
-// #include <algorithm>
-// #include <limits>
-// #include <cmath>
-
 #include <graphlab.hpp>
 
 #include <../../../toolkits/graphical_models/factors/factor_graph.hpp>
@@ -41,28 +29,32 @@ public:
     typedef graphlab::dense_table<MAX_DIM>       dense_table_t;
     typedef graphlab::discrete_domain<MAX_DIM>   domain_t;
     typedef graphlab::discrete_variable          variable_t;
+    typedef belief_prop::factor_graph<MAX_DIM>   factor_graph_t;
 private:
-    belief_prop::factor_graph<MAX_DIM> fgraph;
+    factor_graph_t fgraph;
     std::map<std::string, Variable<MAX_DIM> > variables;
     bool hasChanged;
     std::map<std::string, std::string> evidence;
 public:
     BeliefNetwork(): hasChanged(false){};
 
-    void add_variable(std::vector<std::string> values, std::vector<double> cpd, std::string variable_id){
+    void add_variable(std::vector<std::string>& values, std::vector<double>& cpd, std::string& variable_id){
         add_variable(values, variable_id);
         variables[variable_id].set_cpd(cpd);
-    //hasChanged = true;
+        //hasChanged = true;
     };
-    void add_variable(std::vector<std::string> values, std::string variable_id){
-        Variable<MAX_DIM> var(values, variable_id);
-        variables[variable_id] = var;std::cout << values.size();
-        variable_t f_g_var = fgraph.add_variable(values.size(), variable_id);
-        var.set_f_graph_node(f_g_var);
+
+    void add_variable(std::vector<std::string>& values, std::string& variable_id){
+        Variable<MAX_DIM> var = Variable<MAX_DIM>(values, variable_id, fgraph);
+        //std::cout << values.size() << " " << variable_id << std::endl;
+        variable_t f_var = fgraph.add_variable(values.size(), variable_id);
+        var.set_f_graph_node_num(f_var.id());
+        //std::cout<<"varnum "<<f_var.id()<<std::endl;
+        variables[variable_id] = var;
         hasChanged = true;
     };
 
-    void set_variable_parents(std::vector<std::string> parent_ids, std::string variable_id){
+    void set_variable_parents(std::vector<std::string>& parent_ids, std::string& variable_id){
         std::vector< Variable<MAX_DIM> > parents(parent_ids.size());
         for(int i=0; parent_ids.size(); i++){
             parents[i] = variables[parent_ids[i]];
@@ -71,19 +63,19 @@ public:
         hasChanged = true;
     };
 
-    void add_variable_parent(std::string parent_id, std::string variable_id){
+    void add_variable_parent(std::string& parent_id, std::string& variable_id){
         variables[variable_id].add_parent(variables[parent_id]);
         hasChanged = true;
     };
-    void set_variable_cpd(std::vector<double> cpd, std::string id){
+    void set_variable_cpd(std::vector<double>& cpd, std::string& id){
         variables[id].set_cpd(cpd);
     };
-    //void set_variable_cpd(dense_table_t cpd, std::string id){};
-    dense_table_t get_variable_cpd(variable_t id){
-        return variables[id].get_cpd();
+    //void set_variable_cpd(dense_table_t& cpd, std::string& id){};
+    dense_table_t get_variable_cpd(variable_t& id){
+        return variables[id]->get_cpd();
     };
 
-    void set_evidence(std::map<std::string, std::string> evidence){
+    void set_evidence(std::map<std::string, std::string>& evidence){
         this->evidence(evidence);
         std::map<std::string, std::string >::const_iterator iterator = evidence.begin();
         for(; iterator != evidence.end(); iterator++){
@@ -97,7 +89,7 @@ public:
         hasChanged = true;
     };
 
-    void clear_evidence(std::string id){
+    void clear_evidence(std::string& id){
         variables[id].clear_evidence();
         evidence.erase(id);
         hasChanged = true;
@@ -110,20 +102,19 @@ public:
         evidence.clear();
         hasChanged = true;
     };
-    std::string get_evidence(std::string variable_id){
+    std::string get_evidence(std::string& variable_id){
         return evidence;
     };
     std::map<std::string, std::string> get_evidence();
 
-    dense_table_t infer_variable_cpd(InferenceEngine eng, std::string variable_id){
-        dense_table_t d; return d;
-        hasChanged = false;
+    dense_table_t infer_variable_cpd(InferenceEngine& eng, std::string& variable_id){
+        return variables[variable_id].get_cpd();
         };
-    dense_table_t infer_variables_cpd(InferenceEngine eng, std::vector<std::string> variable_ids){
+    dense_table_t infer_variables_cpd(InferenceEngine& eng, std::vector<std::string>& variable_ids){
         dense_table_t d;
         hasChanged = false;
         return d;};
-    dense_table_t infer_all_variables_cpd(InferenceEngine eng){
+    dense_table_t infer_all_variables_cpd(InferenceEngine& eng){
         dense_table_t d;
         hasChanged = false;
         return d;};
@@ -138,8 +129,8 @@ public:
     //Load belief network from file
 
     friend std::ostream& operator<<(std::ostream& os, const BeliefNetwork<MAX_DIM>& bn){
-        os<<"Belief Network:"<< std::endl <<
-            "has" << ((bn.hasChanged)? " ":" not ")<< "changed"<< std::endl;
+        os<< "Belief Network:" << std::endl <<
+            "has" << ((bn.hasChanged)? " ":" not ") << "changed" << std::endl;
         //Print each of its variables
         typedef typename std::map<std::string, Variable<MAX_DIM> >::const_iterator iter_map_t;
         iter_map_t iter = bn.variables.begin() ;
@@ -156,41 +147,53 @@ class Variable{
     //TODO finish this class
 private:
     typename BeliefNetwork<MAX_DIM>::dense_table_t distribution;
-    typename BeliefNetwork<MAX_DIM>::variable_t f_g_var;
-    std::vector<Variable> parents;
+    typename BeliefNetwork<MAX_DIM>::factor_graph_t *factor_graph;
+    size_t f_graph_num;
+    std::vector<Variable*> parents;
     std::vector<typename BeliefNetwork<MAX_DIM>::variable_t> f_parents;
     std::vector<std::string> values;
     int evidence;
     std::string id;
 
 public:
-    Variable(std::vector<std::string> values, std::string variable_id):
-            values(values), id(variable_id), evidence(-1){};
-    Variable():id(""), evidence(-1){};
+    Variable(std::vector<std::string>& values, std::string& variable_id,
+            typename BeliefNetwork<MAX_DIM>::factor_graph_t &f_graph):
+            values(values), id(variable_id), evidence(-1), factor_graph(&f_graph) {};
+
+    Variable():
+            id(""), evidence(-1), factor_graph(NULL) {};
 
     std::string get_id(){ return id;}
 
-    void set_parents(std::vector<Variable> parents){
+    void set_parents(std::vector<Variable>& parents){
         this->parents.clear();
         f_parents.clear();
         for(int i = 0; i < parents.size(); i++){
-            this->parents.push_back(parents[i]);
-            f_parents.push_back(parents[i].get_f_graph_node());
+            this->parents.push_back(&parents[i]);
+            f_parents.push_back(parents[i]->get_f_graph_node());
         }
     };
 
-    void add_parent(Variable parent){
-        parents.push_back(parent);
+    void add_parent(Variable& parent){
+        parents.push_back(&parent);
         f_parents.push_back(parent.get_f_graph_node());
     };
 
-    void set_f_graph_node(typename BeliefNetwork<MAX_DIM>::variable_t node){f_g_var = node;}
-    typename BeliefNetwork<MAX_DIM>::variable_t get_f_graph_node(){return f_g_var;}
+    void set_f_graph_node_num(size_t num){
+        f_graph_num = num;
+    }
 
-    void set_cpd(std::vector<double> cpd){
-        f_parents.push_back(f_g_var);
-        //typename BeliefNetwork<MAX_DIM>::dense_table_t tmp(f_parents, cpd);
-        //distribution = tmp;
+    typename BeliefNetwork<MAX_DIM>::variable_t get_f_graph_node(){
+        //std::cout << "id "<< id <<" f_graph_num" << f_graph_num<< std::endl;
+        return factor_graph->get_variable(f_graph_num);}
+
+    void set_cpd(std::vector<double>& cpd){
+        f_parents.push_back(factor_graph->get_variable(f_graph_num));
+        for(int i = 0; i < f_parents.size(); i++){
+            std::cout << "setting cpd " << f_parents[i]<< "**" << std::endl;
+        }
+        typename BeliefNetwork<MAX_DIM>::dense_table_t tmp(f_parents, cpd);
+        distribution = tmp;
         f_parents.pop_back();
     };
 
@@ -222,15 +225,15 @@ public:
         os << "Variable{id = '" << var.id << "'";
 
         os << ", values = {'" << var.values[0] << "'";
-        for(int i = 1; i < var.values.size(); i++){
+        for(uint i = 1; i < var.values.size(); i++){
             os << ", '" << var.values[1] << "'";
         }
         os << "}";
 
         if(var.parents.size() > 0){
-            os << ", parents = {'"<< var.parents[0].id<<"'";
+            os << ", parents = {'"<< var.parents[0]->id<<"'";
             for(int i = 1; i < var.parents.size(); i++){
-                os << ", '" << var.parents[i].id << "'";
+                os << ", '" << var.parents[i]->id << "'";
             }
             os << "}";
         }
@@ -238,7 +241,7 @@ public:
             os << ", evidence = '" << var.values[var.evidence] << "'";
         }
 
-        //os << ", cpd = <" << var.distribution << ">";
+        os << ", cpd = <" << var.distribution << ">";
         os << "}";
         return os;
     };
@@ -261,23 +264,25 @@ int main(int argc, char** argv){
     //Criate first variable, rain
     std::vector<double> cpd_r(2, 0.0);
     cpd_r[0] = log(0.4); cpd_r[1] = log(0.6);
-    bnet.add_variable(values, cpd_r, "rain");
+    std::string rain("rain");
+    bnet.add_variable(values, cpd_r, rain);
 
     //Criate second variable, wet
+    std::cout << "Creating wet variable"<< std::endl;
     std::vector<double> cpd_w(4, 0.0);
-    bnet.add_variable(values, "wet");
-    bnet.add_variable_parent("rain", "wet");
+    std::string wet("wet");
+    bnet.add_variable(values, wet);
+    bnet.add_variable_parent(rain, wet);
     cpd_w[0] = log(0.9); cpd_w[2] = log(0.1);
     cpd_w[1] = log(0.4); cpd_w[3] = log(0.6);
-    bnet.set_variable_cpd(cpd_w, "wet");
+    bnet.set_variable_cpd(cpd_w, wet);
 
     //Run inference
     InferenceEngine eng;
     bnet.add_evidence("rain", "true");
-    bnet.infer_variable_cpd(eng, "wet");
-    std::cout << 0.0 << std::endl;
+    //std::cout << bnet.infer_variable_cpd(eng, wet) << std::endl;
 
-    std::cout << bnet<< std::endl;
+    std::cout << std::endl << bnet << std::endl;
 };
 
 #endif //BC_BAYESIAN_NETWORK_HPP
