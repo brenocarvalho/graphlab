@@ -9,6 +9,7 @@
 
 #include <../../../toolkits/graphical_models/factors/factor_graph.hpp>
 #include <../../../toolkits/graphical_models/factors/bp_vertex_program.hpp>
+#include <../../../toolkits/graphical_models/factors/bp_graph_data.h>
 
 // Include the macro for each operation
 #include <graphlab/macros_def.hpp>
@@ -72,7 +73,7 @@ public:
     };
     //void set_variable_cpd(dense_table_t& cpd, std::string& id){};
     dense_table_t get_variable_cpd(variable_t& id){
-        return variables[id]->get_cpd();
+        return *(variables[id]->get_cpd());
     };
 
     void set_evidence(std::map<std::string, std::string>& evidence){
@@ -102,19 +103,15 @@ public:
         evidence.clear();
         hasChanged = true;
     };
-    std::string get_evidence(std::string& variable_id){
-        return evidence;
+    std::string get_evidence(std::string& variable_id) const{
+        return evidence[variable_id];
     };
-    std::map<std::string, std::string> get_evidence();
+    std::map<std::string, std::string> get_evidence(){ return evidence;};
 
     dense_table_t infer_variable_cpd(InferenceEngine& eng, std::string& variable_id){
-        return variables[variable_id].get_cpd();
+        return *(variables[variable_id].get_cpd());
         };
     dense_table_t infer_variables_cpd(InferenceEngine& eng, std::vector<std::string>& variable_ids){
-        dense_table_t d;
-        hasChanged = false;
-        return d;};
-    dense_table_t infer_all_variables_cpd(InferenceEngine& eng){
         dense_table_t d;
         hasChanged = false;
         return d;};
@@ -137,6 +134,7 @@ public:
         for (; iter != bn.variables.end(); iter++) {
              os << (*iter).second << std::endl;
         }
+
         return os;
     };
 };
@@ -146,9 +144,11 @@ template<size_t MAX_DIM>
 class Variable{
     //TODO finish this class
 private:
+    typedef  belief_prop::vertex_data<MAX_DIM> vertex_data_t;
     typename BeliefNetwork<MAX_DIM>::dense_table_t distribution;
     typename BeliefNetwork<MAX_DIM>::factor_graph_t *factor_graph;
     size_t f_graph_num;
+    size_t f_graph_dist;
     std::vector<Variable*> parents;
     std::vector<typename BeliefNetwork<MAX_DIM>::variable_t> f_parents;
     std::vector<std::string> values;
@@ -158,12 +158,12 @@ private:
 public:
     Variable(std::vector<std::string>& values, std::string& variable_id,
             typename BeliefNetwork<MAX_DIM>::factor_graph_t &f_graph):
-            values(values), id(variable_id), evidence(-1), factor_graph(&f_graph) {};
+            values(values), id(variable_id), evidence(-1), factor_graph(&f_graph), f_graph_dist(0) {};
 
     Variable():
-            id(""), evidence(-1), factor_graph(NULL) {};
+            id(""), evidence(-1), factor_graph(NULL), f_graph_dist(0) {};
 
-    std::string get_id(){ return id;}
+    std::string get_id() const{ return id;}
 
     void set_parents(std::vector<Variable>& parents){
         this->parents.clear();
@@ -183,43 +183,61 @@ public:
         f_graph_num = num;
     }
 
-    typename BeliefNetwork<MAX_DIM>::variable_t get_f_graph_node(){
+    typename BeliefNetwork<MAX_DIM>::variable_t get_f_graph_node() const{
         //std::cout << "id "<< id <<" f_graph_num" << f_graph_num<< std::endl;
         return factor_graph->get_variable(f_graph_num);}
 
     void set_cpd(std::vector<double>& cpd){
         f_parents.push_back(factor_graph->get_variable(f_graph_num));
-        for(int i = 0; i < f_parents.size(); i++){
-            std::cout << "setting cpd " << f_parents[i]<< "**" << std::endl;
-        }
         typename BeliefNetwork<MAX_DIM>::dense_table_t tmp(f_parents, cpd);
         distribution = tmp;
+        f_graph_dist = factor_graph->add_factor(tmp, id+"_factor");
         f_parents.pop_back();
+        //std::cout << "Setting cpd for "<< id << std::endl;
     };
 
-    typename BeliefNetwork<MAX_DIM>::dense_table_t get_cpd(){return distribution;};
+    typename BeliefNetwork<MAX_DIM>::dense_table_t* get_cpd() const{
+        std::vector<vertex_data_t>& facts = factor_graph->factors();
+        vertex_data_t& vertex = facts[f_graph_dist];
+        graphlab::table_factor<MAX_DIM> &belief = vertex.potential;
+        typename BeliefNetwork<MAX_DIM>::dense_table_t *table = dynamic_cast<typename BeliefNetwork<MAX_DIM>::dense_table_t*>(belief.table());
+        assert(table != NULL);
+
+        return table;
+    };
 
     void clear_evidence(){ evidence = -1;}
 
     void set_evidence(std::string value){
-        int i = 0;
-        for(; i < values.size(); i++){
-            if(!values[i].compare(value)){ // if we have a match of value in the values list then:
-                evidence = i;
-                //TODO update the factor graph
-                //distribution.set_logP(index, value);
+        int evid;
+        typename BeliefNetwork<MAX_DIM>::dense_table_t* cpd = get_cpd();
+        typename BeliefNetwork<MAX_DIM>::domain_t::const_iterator end = cpd->domain().end();
+        typename BeliefNetwork<MAX_DIM>::domain_t::const_iterator asg = cpd->domain().begin();
+
+        for(evid=0; evid < values.size(); evid++){
+            if(values[evid].compare(value) == 0){ // if we have a match of value in the values list then:
+                evidence = evid;
+                break;
+            }
+        }
+        for(; asg != end; ++asg) {
+            if((*asg).asg(get_f_graph_node()) == evidence){
+                //std::cout<< "Evidence met:"<< (*asg).asg(get_f_graph_node()) <<" "<< evidence;
+                cpd->set_logP( *asg, distribution.logP(*asg) );
+            }else{
+                cpd->set_logP( *asg, -std::numeric_limits<size_t>::infinity() );
             }
         }
     }
 
-    std::string get_evidence(){
-        if(evidence > 0){
+    std::string get_evidence() const{
+        if(evidence >= 0){
             return values[evidence];
         }
         return "";
     }
 
-    bool has_evidence(){ return evidence > 0; }
+    bool has_evidence() const{ return evidence > 0; }
 
     friend std::ostream& operator<<(std::ostream& os, const Variable<MAX_DIM>& var){
         os << "Variable{id = '" << var.id << "'";
@@ -238,10 +256,10 @@ public:
             os << "}";
         }
         if(var.evidence >= 0){
-            os << ", evidence = '" << var.values[var.evidence] << "'";
+            os << ", evidence = '" << var.get_evidence() << "'";
         }
 
-        os << ", cpd = <" << var.distribution << ">";
+        os << ", cpd = <" << *(var.get_cpd()) << ">";
         os << "}";
         return os;
     };
@@ -280,9 +298,9 @@ int main(int argc, char** argv){
     //Run inference
     InferenceEngine eng;
     bnet.add_evidence("rain", "true");
-    //std::cout << bnet.infer_variable_cpd(eng, wet) << std::endl;
+    std::cout << bnet.infer_variable_cpd(eng, wet) << std::endl;
 
     std::cout << std::endl << bnet << std::endl;
 };
 
-#endif //BC_BAYESIAN_NETWORK_HPP
+#endif //BC_BAYESIAN_NETWORK_HP

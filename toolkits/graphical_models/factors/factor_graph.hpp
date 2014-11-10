@@ -287,7 +287,7 @@ private:
 public:
   /** Add a new discrete factor to the factor graph */
   // REVIEW prevent a factor from being double added
-  void add_factor(const table_base_t& factor, 
+  size_t add_factor(const table_base_t& factor, 
       const std::string& default_factor_name = "") 
   {
     size_t id = _unique_var_id++;
@@ -318,6 +318,7 @@ public:
     vertex_data_t vertex(node, uniform, false, factor_name);
     _factors.push_back(vertex);
     //ASSERT_EQ(_factors[id], vertex);
+    return id;
   }
 
 // utils
@@ -554,7 +555,7 @@ public:
   }
 
 // accessors
-private:
+public:
   const std::vector<vertex_data_t>& factors() const { return _factors; }
   std::vector<vertex_data_t>& factors() { return _factors; }
 
