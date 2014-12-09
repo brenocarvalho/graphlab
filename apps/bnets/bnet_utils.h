@@ -13,6 +13,7 @@
 
 // Include the macro for each operation
 #include <graphlab/macros_def.hpp>
+#include <../../../apps/bnets/csv_reader.h>
 
 //add functionalities to factor graph to allow evidence and change of the structure
 
@@ -70,7 +71,7 @@ template<size_t MAX_DIM>
 class BeliefPropagationEngine : public InferenceEngine<MAX_DIM> {
     //Prepare the methods for a general inference engine and consider moving that to another file
 public:
-    void run(graphlab::distributed_control&dc ,
+    void run(graphlab::distributed_control& dc ,
         graphlab::distributed_graph<belief_prop::vertex_data<MAX_DIM>, belief_prop::edge_data<MAX_DIM> >& graph,
         std::basic_string<char, std::char_traits<char>, std::allocator<char> > const& exec_type,
         graphlab::command_line_options const& clopts){
@@ -86,6 +87,23 @@ public:
     }
 
 };
+
+// template<size_t MAX_DIM>
+// class ParameterLearning_CompleteData {
+// public:
+//     void run(graphlab::distributed_control&dc ,
+//     graphlab::distributed_graph<belief_prop::vertex_data<MAX_DIM>, belief_prop::edge_data<MAX_DIM> >& graph,
+//     DataSet& data){
+//         //clear parameters
+//         //Iterate over the rows
+//         for(std::list< std::list<std::string> >::const_iterator i = data.begin();
+//             i != data.end(); i++){
+//             //For each vertice read the proper values and sum //TODO parellize it
+//         }
+//         //normalize
+//     }
+//
+// };
 
 template<size_t MAX_DIM> class Variable;
 template<size_t MAX_DIM> class BeliefNetwork;
@@ -188,17 +206,32 @@ public:
             fgraph.pull_beliefs_for_variables( graph );
 
             return *(variables[variable_id].get_cpd());
-        };
+    };
+
     dense_table_t infer_variables_cpd(InferenceEngine<MAX_DIM>& eng, std::vector<std::string>& variable_ids){
         dense_table_t d;
         hasChanged = false;
-        return d;};
+        return d;
+    };
 
-    //Use SFrames to get info to set your parameters (complete data)
-    //Use SFrames to get info to set your parameters (incomplete data) <- Use an engine
+    void normalize(){};
 
-    //Use SFrames to get info to set your structure(complete data)
-    //Use SFrames to get info to set your structures (incomplete data) <- Use an engine
+    void learn_parameters(graphlab::distributed_control& dc,
+    DataSet& data){
+        //clear parameters
+        //Iterate over the rows
+        Variable<MAX_DIM> var;
+        std::list< std::list<std::string> >::const_iterator i;
+        for(i = data.begin(); i != data.end(); i++){
+            //For each vertice read the proper values and sum //TODO parallelize it
+            typename std::map< std::string, Variable<MAX_DIM> >::iterator item;
+            for (item = variables.begin(); item != variables.end(); ++item) {
+                var = item->second;
+                var.update_dist(*(data.header), *i);
+            }
+        }
+        normalize();
+    }
 
     //Save belief network to file
     //Load belief network from file
@@ -227,7 +260,7 @@ private:
     typename BeliefNetwork<MAX_DIM>::factor_graph_t *factor_graph;
     size_t f_graph_num;
     size_t f_graph_dist;
-    std::vector<Variable*> parents;
+    std::vector<Variable<MAX_DIM>*> parents;
     std::vector<typename BeliefNetwork<MAX_DIM>::variable_t> f_parents;
     std::vector<std::string> values;
     int evidence;
@@ -261,9 +294,9 @@ public:
         f_graph_num = num;
     }
 
-    typename BeliefNetwork<MAX_DIM>::variable_t get_f_graph_node() const{
-        //std::cout << "id "<< id <<" f_graph_num" << f_graph_num<< std::endl;
-        return factor_graph->get_variable(f_graph_num);}
+    const typename BeliefNetwork<MAX_DIM>::variable_t& get_f_graph_node() const{
+        return factor_graph->get_variable(f_graph_num);
+    }
 
     void set_cpd(std::vector<double>& cpd){
         f_parents.push_back(factor_graph->get_variable(f_graph_num));
@@ -272,7 +305,7 @@ public:
         f_graph_dist = factor_graph->add_factor(tmp, id+"_factor");
         f_parents.pop_back();
         //std::cout << "Setting cpd for "<< id << std::endl;
-    };
+    }
 
     typename BeliefNetwork<MAX_DIM>::dense_table_t* get_cpd() const{
         std::vector<vertex_data_t>& facts = factor_graph->factors();
@@ -282,22 +315,73 @@ public:
         assert(table != NULL);
 
         return table;
-    };
+    }
+
+private:
+    Variable<MAX_DIM>& get_scope_var(std::string id){
+        Variable<MAX_DIM>& out = *this;
+        if(this->id.compare(id) == 0){
+            return out;
+        }
+
+        for(typename std::vector<Variable<MAX_DIM>*>::const_iterator i = parents.begin(); i != parents.end(); i++){
+            if((*i)->id.compare(id) == 0){
+                out = **i;
+                return out;
+            }
+        }
+        throw std::domain_error("Variable is not in the scope");
+    }
+
+    size_t get_value_num(std::string value) const{
+        for(size_t out = 0; out < values.size(); out++){
+            if(values[out].compare(value) == 0){ // if we have a match of value in the values list then:
+                return out;
+            }
+        }
+        throw std::invalid_argument("Variable does not have the requested value");
+    }
+
+public:
+
+    void update_dist(std::list<std::string> fields, std::list<std::string> values){
+        typename BeliefNetwork<MAX_DIM>::dense_table_t* cpd = get_cpd();
+
+        DCHECK_EQ(values.size(), fields.size());
+
+        std::list<std::string>::const_iterator fields_i, values_i;
+        fields_i = fields.begin();
+        values_i = values.begin();
+
+        std::vector<typename BeliefNetwork<MAX_DIM>::variable_t> assignment(parents.size()+1);
+        std::vector<size_t> value_numbers(assignment.size());
+        std::cout << *this<< std::endl;
+        for(size_t i; i < assignment.size(); i++){
+            std::cout << "[" << *fields_i << ", " << *values_i << "]" << std::endl;
+            while(fields_i != fields.end()){
+                try{
+                    assignment[i]    = get_scope_var(*fields_i).get_f_graph_node();
+                    value_numbers[i] = get_value_num(*values_i);
+                    fields_i++; values_i++;
+                    break;
+                }catch(const std::domain_error& e){}
+                fields_i++; values_i++;
+            }
+        }
+        typename graphlab::discrete_assignment<MAX_DIM> asg(assignment, value_numbers);
+        cpd->set_logP(asg, cpd->logP(asg));
+        std::cout << std::endl;
+    }
 
     void clear_evidence(){ evidence = -1;}
 
     void set_evidence(std::string value){
-        int evid;
         typename BeliefNetwork<MAX_DIM>::dense_table_t* cpd = get_cpd();
         typename BeliefNetwork<MAX_DIM>::domain_t::const_iterator end = cpd->domain().end();
         typename BeliefNetwork<MAX_DIM>::domain_t::const_iterator asg = cpd->domain().begin();
 
-        for(evid=0; evid < values.size(); evid++){
-            if(values[evid].compare(value) == 0){ // if we have a match of value in the values list then:
-                evidence = evid;
-                break;
-            }
-        }
+        evidence = get_value_num(value);
+
         for(; asg != end; ++asg) {
             if((*asg).asg(get_f_graph_node()) == evidence){
                 //std::cout<< "Evidence met:"<< (*asg).asg(get_f_graph_node()) <<" "<< evidence;
