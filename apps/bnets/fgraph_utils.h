@@ -1442,21 +1442,21 @@ int main(int argc, char** argv){
     }*/
 
     for(int i = 0; i < 100; i++){
-        experiment1(dc, "/home/ubuntu/Documents/git-repos/graphlab/apps/bnets/samples/",
+        experiment1(dc, "/home/ubuntu/graphlab/apps/bnets/samples/",
                         "BBNet-hailfinder.gl",
                         "P(CapInScen[LessThanAve,Average,MoreThanAve]|AMCINInScen,CapChange)",
                         "hailfinder_500_perc30_missing_data.txt",
-                        "/home/breno/pgm_test" );
+                        "/home/ubuntu/pgm_test" );
     }
 
-    /*for(int i = 0; i < 100; i++){
+    for(int i = 0; i < 100; i++){
         experiment1(dc,
-                        "/home/breno/Documents/git-repos/graphlab/apps/bnets/samples/",
+                        "/home/ubuntu/graphlab/apps/bnets/samples/",
                         "BBNet-alarm.gl",
                         "P(CO[Low,Normal,High]|HR,StrokeVolume)",
                         "alarm_1000_perc30_missing_data.txt",
-                        "/home/breno/pgm_test" );
-    }*/
+                        "/home/ubuntu/pgm_test" );
+    }
 
     std::cout << "closing mpi" << std::endl;
     graphlab::mpi_tools::finalize();
