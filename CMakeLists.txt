@@ -431,9 +431,10 @@ if(NOT NO_JAVAC)
     message(STATUS "Building libhdfs")
     ExternalProject_Add(hadoop
       PREFIX ${GraphLab_SOURCE_DIR}/deps/hadoop
-      URL http://graphlab.org/deps/hadoop-1.0.1.tar.gz
+       URL https://www.dropbox.com/s/qlhch3nlo4s2el4/hadoop-1.0.1.tar.gz?dl=0
+#      URL https://www.dropbox.com/s/qlhch3nlo4s2el4/hadoop-1.0.1.tar.gz
 #      URL http://www.gtlib.gatech.edu/pub/apache/hadoop/common/hadoop-1.0.1/hadoop-1.0.1.tar.gz
-      URL_MD5 10c26a98ea534744646bf4b54db102f0
+      URL_MD5 10c26a98ea534744646bf4b54db102f0bzn
       UPDATE_COMMAND chmod +x <SOURCE_DIR>/src/c++/libhdfs/install-sh <SOURCE_DIR>/src/c++/libhdfs/configure
       PATCH_COMMAND patch -N -p1 -i ${GraphLab_SOURCE_DIR}/patches/libhdfs.patch || true
       BUILD_IN_SOURCE 1
