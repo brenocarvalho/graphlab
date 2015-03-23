@@ -1,2 +1,2 @@
 project(BNetsLearning)
-add_graphlab_executable(bnet testBNet2.cpp)
+add_graphlab_executable(graph bnet_utils.cpp)

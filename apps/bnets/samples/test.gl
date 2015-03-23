@@ -1,0 +1,7 @@
+1 Factor [< ( rain |  false true ) >  0.350746 0.649254 ]
+2 Variable ( rain |  false true )
+3 Factor [< ( wet | false true maybe ) ( rain |  false true ) >  0.642857 0.346154 0.357143 0.653846 0 0 ]
+4 Variable ( wet | false true maybe )
+1 -> 2
+3 -> 2
+3 -> 4

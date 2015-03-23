@@ -15,7 +15,7 @@
 #include <graphlab/macros_def.hpp>
 #include <../../../apps/bnets/csv_reader.h>
 
-//add functionalities to factor graph to allow evidence and change of the structure
+//add functionalities to factor graph to allow evidence and changes in the structure
 
 struct clopts_vals {
   clopts_vals(double bound = 1E-4, double damping = 0.0,
@@ -81,8 +81,8 @@ public:
 
             engine.signal_all();
             engine.start();
-            const float runtime = engine.elapsed_seconds();
-            size_t update_count = engine.num_updates();
+            //const float runtime = engine.elapsed_seconds();
+            //size_t update_count = engine.num_updates();
 
     }
 
@@ -214,7 +214,15 @@ public:
         return d;
     };
 
-    void normalize(){};
+    void normalize(graphlab::distributed_control& dc){
+        Variable<MAX_DIM> var;
+        std::list< std::list<std::string> >::const_iterator i;
+        typename std::map< std::string, Variable<MAX_DIM> >::iterator item;
+        for (item = variables.begin(); item != variables.end(); ++item) {
+            var = item->second;
+            var.normalize();
+        }
+    }
 
     void learn_parameters(graphlab::distributed_control& dc,
     DataSet& data){
@@ -227,10 +235,10 @@ public:
             typename std::map< std::string, Variable<MAX_DIM> >::iterator item;
             for (item = variables.begin(); item != variables.end(); ++item) {
                 var = item->second;
-                var.update_dist(*(data.header), *i);
+                var.update_dist(data.getHeader(), *i);
             }
         }
-        normalize();
+        normalize(dc);
     }
 
     //Save belief network to file
@@ -318,19 +326,21 @@ public:
     }
 
 private:
-    Variable<MAX_DIM>& get_scope_var(std::string id){
-        Variable<MAX_DIM>& out = *this;
+    const Variable<MAX_DIM>& get_scope_var(std::string id){
+        Variable<MAX_DIM>* out = this;
+        //std::cerr << "testing against itself, " << this->id<< std::endl;
         if(this->id.compare(id) == 0){
-            return out;
+            return *out;
         }
 
         for(typename std::vector<Variable<MAX_DIM>*>::const_iterator i = parents.begin(); i != parents.end(); i++){
+            //std::cerr << "testing against a parent, " << (*i)->id<< std::endl;
             if((*i)->id.compare(id) == 0){
-                out = **i;
-                return out;
+                out = *i;
+                return *out;
             }
         }
-        throw std::domain_error("Variable is not in the scope");
+        throw std::domain_error("Variable " + id +" is not in the scope.");
     }
 
     size_t get_value_num(std::string value) const{
@@ -339,7 +349,7 @@ private:
                 return out;
             }
         }
-        throw std::invalid_argument("Variable does not have the requested value");
+        throw std::invalid_argument("Variable does not have the requested value: '"+ value +"'.");
     }
 
 public:
@@ -355,25 +365,105 @@ public:
 
         std::vector<typename BeliefNetwork<MAX_DIM>::variable_t> assignment(parents.size()+1);
         std::vector<size_t> value_numbers(assignment.size());
-        std::cout << *this<< std::endl;
-        for(size_t i; i < assignment.size(); i++){
-            std::cout << "[" << *fields_i << ", " << *values_i << "]" << std::endl;
+        //std::cout <<"Working on "<< std::endl << *this <<std::endl
+        //          << "Assignment of size: "<< assignment.size() << std::endl;
+
+        for(size_t i = 0; i < assignment.size(); i++){
+            //std::cout << "[" << *fields_i << ", " << *values_i << "]" << std::endl;
             while(fields_i != fields.end()){
                 try{
                     assignment[i]    = get_scope_var(*fields_i).get_f_graph_node();
                     value_numbers[i] = get_value_num(*values_i);
                     fields_i++; values_i++;
+                    //std::cout << "---"<< assignment[i] << std::endl;
                     break;
-                }catch(const std::domain_error& e){}
-                fields_i++; values_i++;
+                }catch(const std::domain_error& e){
+                    fields_i++; values_i++;
+                }
             }
         }
+        //std::cout << std::endl;
         typename graphlab::discrete_assignment<MAX_DIM> asg(assignment, value_numbers);
-        cpd->set_logP(asg, cpd->logP(asg));
-        std::cout << std::endl;
+        cpd->set_logP(asg, cpd->logP(asg)+1);
+        //std::cout << "  ASSIGNMENT DONE"<< std::endl;
     }
 
-    void clear_evidence(){ evidence = -1;}
+    void normalize(){
+        typename BeliefNetwork<MAX_DIM>::dense_table_t* cpd = get_cpd();
+        typename graphlab::discrete_assignment<MAX_DIM>* asg;
+
+        std::vector<typename BeliefNetwork<MAX_DIM>::variable_t> assignment(parents.size()+1);
+        std::vector<size_t> value_numbers(assignment.size());
+        int sum;
+
+        for(size_t i = 0; i < assignment.size()-1; i++){
+            assignment[i]    = parents[i]->get_f_graph_node();
+            value_numbers[i] = 0;
+        }
+        assignment[assignment.size()-1]    = get_f_graph_node();
+        value_numbers[assignment.size()-1] = 0;
+
+        //Normalization of variables without parents
+        if(parents.size() == 0){
+            sum = 0;
+            for(size_t value = 0; value < this->values.size(); value++){
+                value_numbers[0] = value;
+                asg = new typename graphlab::discrete_assignment<MAX_DIM>(assignment, value_numbers);
+                sum += cpd->logP(*asg);
+            }
+            for(size_t value = 0; value < this->values.size(); value++){
+                value_numbers[0] = value;
+                asg = new typename graphlab::discrete_assignment<MAX_DIM>(assignment, value_numbers);
+                sum = (sum != 0)? sum : 1;
+                cpd->set_logP(*asg, cpd->logP(*asg)/sum);
+            }
+            return;
+        }
+        //normalization with parents
+        while(true){
+            for(size_t i = 0; i < assignment[0].size(); i++){
+                value_numbers[0] = i;
+                sum = 0;
+                for(size_t value = 0; value < this->values.size(); value++){
+                    value_numbers[assignment.size()-1] = value;
+                    asg = new typename graphlab::discrete_assignment<MAX_DIM>(assignment, value_numbers);
+                    sum += cpd->logP(*asg);
+                }
+                for(size_t value = 0; value < this->values.size(); value++){
+                    value_numbers[assignment.size()-1] = value;
+                    asg = new typename graphlab::discrete_assignment<MAX_DIM>(assignment, value_numbers);
+                    sum = (sum != 0)? sum : 1;
+                    cpd->set_logP(*asg, cpd->logP(*asg)/sum);
+                }
+            }
+            int count = 1;
+            while(count < assignment.size()-1){
+                if(value_numbers[count] == parents[count]->values.size()-1){
+                    value_numbers[count] = 0;
+                    count += 1;
+                }else{
+                    value_numbers[count] += 1;
+                    break;
+                }
+            }
+            if(count >= assignment.size()-1){
+                break;
+            }
+        }
+    }
+
+    void clear_evidence(){
+        typename BeliefNetwork<MAX_DIM>::dense_table_t* cpd = get_cpd();
+        typename BeliefNetwork<MAX_DIM>::domain_t::const_iterator end = cpd->domain().end();
+        typename BeliefNetwork<MAX_DIM>::domain_t::const_iterator asg = cpd->domain().begin();
+
+        for(; asg != end; ++asg) {
+            if((*asg).asg(get_f_graph_node()) != evidence){
+                cpd->set_logP( *asg, distribution.logP(*asg));
+            }
+        }
+        evidence = -1;
+    }
 
     void set_evidence(std::string value){
         typename BeliefNetwork<MAX_DIM>::dense_table_t* cpd = get_cpd();
@@ -385,7 +475,7 @@ public:
         for(; asg != end; ++asg) {
             if((*asg).asg(get_f_graph_node()) == evidence){
                 //std::cout<< "Evidence met:"<< (*asg).asg(get_f_graph_node()) <<" "<< evidence;
-                cpd->set_logP( *asg, 0);//distribution.logP(*asg) );
+                cpd->set_logP( *asg, distribution.logP(*asg) );
             }else{
                 cpd->set_logP( *asg, -100000);//-std::numeric_limits<size_t>::infinity() );
             }
