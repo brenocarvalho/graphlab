@@ -1442,7 +1442,7 @@ int main(int argc, char** argv){
     }*/
 
     for(int i = 0; i < 100; i++){
-        experiment1(dc, "/home/breno/Documents/git-repos/graphlab/apps/bnets/samples/",
+        experiment1(dc, "/home/ubuntu/Documents/git-repos/graphlab/apps/bnets/samples/",
                         "BBNet-hailfinder.gl",
                         "P(CapInScen[LessThanAve,Average,MoreThanAve]|AMCINInScen,CapChange)",
                         "hailfinder_500_perc30_missing_data.txt",
