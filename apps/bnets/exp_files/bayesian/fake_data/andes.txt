@@ -1,0 +1,1007 @@
+001 Variable ( GOAL_2 | false true )
+002 Variable ( SNode_3 | false true )
+003 Variable ( SNode_4 | false true )
+004 Variable ( SNode_5 | false true )
+005 Variable ( SNode_6 | false true )
+006 Variable ( SNode_7 | false true )
+007 Variable ( DISPLACEM0 | false true )
+008 Variable ( RApp1 | false true )
+009 Variable ( GIVEN_1 | false true )
+010 Variable ( RApp2 | false true )
+011 Variable ( SNode_8 | false true )
+012 Variable ( SNode_9 | false true )
+013 Variable ( SNode_10 | false true )
+014 Variable ( SNode_11 | false true )
+015 Variable ( SNode_12 | false true )
+016 Variable ( SNode_13 | false true )
+017 Variable ( SNode_14 | false true )
+018 Variable ( SNode_15 | false true )
+019 Variable ( SNode_16 | false true )
+020 Variable ( SNode_17 | false true )
+021 Variable ( SNode_18 | false true )
+022 Variable ( SNode_19 | false true )
+023 Variable ( NEED1 | false true )
+024 Variable ( SNode_20 | false true )
+025 Variable ( GRAV2 | false true )
+026 Variable ( SNode_21 | false true )
+027 Variable ( VALUE3 | false true )
+028 Variable ( SNode_24 | false true )
+029 Variable ( SLIDING4 | false true )
+030 Variable ( SNode_25 | false true )
+031 Variable ( CONSTANT5 | false true )
+032 Variable ( SNode_26 | false true )
+033 Variable ( KNOWN6 | false true )
+034 Variable ( VELOCITY7 | false true )
+035 Variable ( SNode_47 | false true )
+036 Variable ( RApp3 | false true )
+037 Variable ( KNOWN8 | false true )
+038 Variable ( RApp4 | false true )
+039 Variable ( SNode_27 | false true )
+040 Variable ( COMPO16 | false true )
+041 Variable ( GOAL_48 | false true )
+042 Variable ( TRY12 | false true )
+043 Variable ( TRY11 | false true )
+044 Variable ( GOAL_49 | false true )
+045 Variable ( CHOOSE19 | false true )
+046 Variable ( GOAL_50 | false true )
+047 Variable ( SYSTEM18 | false true )
+048 Variable ( SNode_51 | false true )
+049 Variable ( KINEMATI17 | false true )
+050 Variable ( SNode_52 | false true )
+051 Variable ( IDENTIFY10 | false true )
+052 Variable ( GOAL_53 | false true )
+053 Variable ( IDENTIFY9 | false true )
+054 Variable ( SNode_28 | false true )
+055 Variable ( TRY13 | false true )
+056 Variable ( TRY14 | false true )
+057 Variable ( TRY15 | false true )
+058 Variable ( VAR20 | false true )
+059 Variable ( SNode_29 | false true )
+060 Variable ( SNode_31 | false true )
+061 Variable ( GIVEN21 | false true )
+062 Variable ( SNode_33 | false true )
+063 Variable ( SNode_34 | false true )
+064 Variable ( VECTOR27 | false true )
+065 Variable ( APPLY32 | false true )
+066 Variable ( GOAL_56 | false true )
+067 Variable ( CHOOSE35 | false true )
+068 Variable ( GOAL_57 | false true )
+069 Variable ( MAXIMIZE34 | false true )
+070 Variable ( SNode_59 | false true )
+071 Variable ( AXIS33 | false true )
+072 Variable ( SNode_60 | false true )
+073 Variable ( WRITE31 | false true )
+074 Variable ( GOAL_61 | false true )
+075 Variable ( WRITE30 | false true )
+076 Variable ( GOAL_62 | false true )
+077 Variable ( RESOLVE37 | false true )
+078 Variable ( GOAL_63 | false true )
+079 Variable ( NEED36 | false true )
+080 Variable ( SNode_64 | false true )
+081 Variable ( SNode_41 | false true )
+082 Variable ( SNode_42 | false true )
+083 Variable ( IDENTIFY39 | false true )
+084 Variable ( SNode_43 | false true )
+085 Variable ( RESOLVE38 | false true )
+086 Variable ( GOAL_66 | false true )
+087 Variable ( SNode_67 | false true )
+088 Variable ( IDENTIFY41 | false true )
+089 Variable ( SNode_54 | false true )
+090 Variable ( RESOLVE40 | false true )
+091 Variable ( GOAL_69 | false true )
+092 Variable ( SNode_70 | false true )
+093 Variable ( IDENTIFY43 | false true )
+094 Variable ( SNode_55 | false true )
+095 Variable ( RESOLVE42 | false true )
+096 Variable ( GOAL_72 | false true )
+097 Variable ( SNode_73 | false true )
+098 Variable ( KINE29 | false true )
+099 Variable ( SNode_74 | false true )
+100 Variable ( VECTOR44 | false true )
+101 Variable ( SNode_75 | false true )
+102 Variable ( EQUATION28 | false true )
+103 Variable ( GOAL_79 | false true )
+104 Variable ( RApp5 | false true )
+105 Variable ( GOAL_80 | false true )
+106 Variable ( RApp6 | false true )
+107 Variable ( GOAL_81 | false true )
+108 Variable ( TRY25 | false true )
+109 Variable ( TRY24 | false true )
+110 Variable ( GOAL_83 | false true )
+111 Variable ( CHOOSE47 | false true )
+112 Variable ( GOAL_84 | false true )
+113 Variable ( SYSTEM46 | false true )
+114 Variable ( SNode_86 | false true )
+115 Variable ( NEWTONS45 | false true )
+116 Variable ( SNode_156 | false true )
+117 Variable ( DEFINE23 | false true )
+118 Variable ( GOAL_98 | false true )
+119 Variable ( IDENTIFY22 | false true )
+120 Variable ( SNode_37 | false true )
+121 Variable ( TRY26 | false true )
+122 Variable ( SNode_38 | false true )
+123 Variable ( SNode_40 | false true )
+124 Variable ( SNode_44 | false true )
+125 Variable ( SNode_46 | false true )
+126 Variable ( NULL48 | false true )
+127 Variable ( SNode_65 | false true )
+128 Variable ( SNode_68 | false true )
+129 Variable ( SNode_71 | false true )
+130 Variable ( FIND49 | false true )
+131 Variable ( GOAL_87 | false true )
+132 Variable ( NORMAL50 | false true )
+133 Variable ( SNode_88 | false true )
+134 Variable ( STRAT_90 | SNode_92_1 SNode_91_2 )
+135 Variable ( NORMAL52 | false true )
+136 Variable ( INCLINE51 | false true )
+137 Variable ( SNode_91 | false true )
+138 Variable ( HORIZ53 | false true )
+139 Variable ( BUGGY54 | false true )
+140 Variable ( SNode_92 | false true )
+141 Variable ( IDENTIFY55 | false true )
+142 Variable ( SNode_93 | false true )
+143 Variable ( WEIGHT56 | false true )
+144 Variable ( SNode_94 | false true )
+145 Variable ( WEIGHT57 | false true )
+146 Variable ( SNode_95 | false true )
+147 Variable ( SNode_97 | false true )
+148 Variable ( FIND58 | false true )
+149 Variable ( GOAL_99 | false true )
+150 Variable ( IDENTIFY59 | false true )
+151 Variable ( SNode_100 | false true )
+152 Variable ( FORCE60 | false true )
+153 Variable ( SNode_102 | false true )
+154 Variable ( APPLY61 | false true )
+155 Variable ( GOAL_103 | false true )
+156 Variable ( CHOOSE62 | false true )
+157 Variable ( GOAL_104 | false true )
+158 Variable ( SNode_106 | false true )
+159 Variable ( SNode_152 | false true )
+160 Variable ( WRITE63 | false true )
+161 Variable ( GOAL_107 | false true )
+162 Variable ( WRITE64 | false true )
+163 Variable ( GOAL_108 | false true )
+164 Variable ( GOAL_109 | false true )
+165 Variable ( GOAL65 | false true )
+166 Variable ( GOAL_110 | false true )
+167 Variable ( GOAL66 | false true )
+168 Variable ( GOAL_111 | false true )
+169 Variable ( NEED67 | false true )
+170 Variable ( RApp7 | false true )
+171 Variable ( RApp8 | false true )
+172 Variable ( SNode_112 | false true )
+173 Variable ( GOAL68 | false true )
+174 Variable ( GOAL_113 | false true )
+175 Variable ( GOAL_114 | false true )
+176 Variable ( SNode_115 | false true )
+177 Variable ( VECTOR69 | false true )
+178 Variable ( SNode_116 | false true )
+179 Variable ( SNode_117 | false true )
+180 Variable ( VECTOR70 | false true )
+181 Variable ( SNode_118 | false true )
+182 Variable ( EQUAL71 | false true )
+183 Variable ( SNode_119 | false true )
+184 Variable ( SNode_120 | false true )
+185 Variable ( GOAL72 | false true )
+186 Variable ( GOAL_121 | false true )
+187 Variable ( SNode_122 | false true )
+188 Variable ( VECTOR73 | false true )
+189 Variable ( SNode_123 | false true )
+190 Variable ( NEWTONS74 | false true )
+191 Variable ( SNode_124 | false true )
+192 Variable ( SUM75 | false true )
+193 Variable ( SNode_125 | false true )
+194 Variable ( GOAL_126 | false true )
+195 Variable ( GOAL_127 | false true )
+196 Variable ( RApp9 | false true )
+197 Variable ( RApp10 | false true )
+198 Variable ( SNode_128 | false true )
+199 Variable ( GOAL_129 | false true )
+200 Variable ( GOAL_130 | false true )
+201 Variable ( SNode_131 | false true )
+202 Variable ( SNode_132 | false true )
+203 Variable ( SNode_133 | false true )
+204 Variable ( SNode_134 | false true )
+205 Variable ( SNode_135 | false true )
+206 Variable ( SNode_154 | false true )
+207 Variable ( SNode_136 | false true )
+208 Variable ( SNode_137 | false true )
+209 Variable ( GOAL_142 | false true )
+210 Variable ( GOAL_143 | false true )
+211 Variable ( GOAL_146 | false true )
+212 Variable ( RApp11 | false true )
+213 Variable ( RApp12 | false true )
+214 Variable ( RApp13 | false true )
+215 Variable ( GOAL_147 | false true )
+216 Variable ( TRY76 | false true )
+217 Variable ( GOAL_149 | false true )
+218 Variable ( APPLY77 | false true )
+219 Variable ( GOAL_150 | false true )
+220 Variable ( GRAV78 | false true )
+221 Variable ( SNode_151 | false true )
+222 Variable ( GOAL_153 | false true )
+223 Variable ( SNode_155 | false true )
+223 Factor [< ( GOAL_2 | false true ) > 0.02 0.98 ]
+224 Factor [< ( SNode_3 | false true ) > 0.02 0.98 ]
+225 Factor [< ( SNode_4 | false true ) > 0.02 0.98 ]
+226 Factor [< ( SNode_5 | false true ) > 0.02 0.98 ]
+227 Factor [< ( SNode_6 | false true ) > 0.02 0.98 ]
+228 Factor [< ( SNode_7 | false true ) > 0.02 0.98 ]
+229 Factor [< ( DISPLACEM0 | false true ) > 0.5 0.5 ]
+230 Factor [< ( GIVEN_1 | false true ) > 0.02 0.98 ]
+231 Factor [< ( SNode_9 | false true ) > 0.02 0.98 ]
+232 Factor [< ( SNode_10 | false true ) > 0.02 0.98 ]
+233 Factor [< ( SNode_11 | false true ) > 0.02 0.98 ]
+234 Factor [< ( SNode_12 | false true ) > 0.02 0.98 ]
+235 Factor [< ( SNode_13 | false true ) > 0.02 0.98 ]
+236 Factor [< ( SNode_14 | false true ) > 0.02 0.98 ]
+237 Factor [< ( SNode_15 | false true ) > 0.02 0.98 ]
+238 Factor [< ( SNode_16 | false true ) > 0.02 0.98 ]
+239 Factor [< ( SNode_17 | false true ) > 0.02 0.98 ]
+240 Factor [< ( SNode_18 | false true ) > 0.02 0.98 ]
+241 Factor [< ( SNode_19 | false true ) > 0.02 0.98 ]
+242 Factor [< ( NEED1 | false true ) > 0.5 0.5 ]
+243 Factor [< ( GRAV2 | false true ) > 0.5 0.5 ]
+244 Factor [< ( VALUE3 | false true ) > 0.5 0.5 ]
+245 Factor [< ( SLIDING4 | false true ) > 0.1 0.9 ]
+246 Factor [< ( CONSTANT5 | false true ) > 0.5 0.5 ]
+247 Factor [< ( KNOWN6 | false true ) > 0.5 0.5 ]
+248 Factor [< ( VELOCITY7 | false true ) > 0.5 0.5 ]
+249 Factor [< ( KNOWN8 | false true ) > 0.5 0.5 ]
+250 Factor [< ( COMPO16 | false true ) > 0.5 0.5 ]
+251 Factor [< ( TRY12 | false true ) > 0.7 0.3 ]
+252 Factor [< ( CHOOSE19 | false true ) > 0.5 0.5 ]
+253 Factor [< ( SYSTEM18 | false true ) > 0.5 0.5 ]
+254 Factor [< ( KINEMATI17 | false true ) > 0.5 0.5 ]
+255 Factor [< ( IDENTIFY10 | false true ) > 0.5 0.5 ]
+256 Factor [< ( IDENTIFY9 | false true ) > 0.5 0.5 ]
+257 Factor [< ( VAR20 | false true ) > 0.3 0.7 ]
+258 Factor [< ( GIVEN21 | false true ) > 0.1 0.9 ]
+259 Factor [< ( VECTOR27 | false true ) > 0.5 0.5 ]
+260 Factor [< ( APPLY32 | false true ) > 0.5 0.5 ]
+261 Factor [< ( CHOOSE35 | false true ) > 0.5 0.5 ]
+262 Factor [< ( MAXIMIZE34 | false true ) > 0.5 0.5 ]
+263 Factor [< ( AXIS33 | false true ) > 0.2 0.8 ]
+264 Factor [< ( WRITE31 | false true ) > 0.5 0.5 ]
+265 Factor [< ( WRITE30 | false true ) > 0.5 0.5 ]
+266 Factor [< ( RESOLVE37 | false true ) > 0.5 0.5 ]
+267 Factor [< ( NEED36 | false true ) > 0.5 0.5 ]
+268 Factor [< ( IDENTIFY39 | false true ) > 0.5 0.5 ]
+269 Factor [< ( RESOLVE38 | false true ) > 0.5 0.5 ]
+270 Factor [< ( IDENTIFY41 | false true ) > 0.5 0.5 ]
+271 Factor [< ( RESOLVE40 | false true ) > 0.5 0.5 ]
+272 Factor [< ( IDENTIFY43 | false true ) > 0.6 0.4 ]
+273 Factor [< ( RESOLVE42 | false true ) > 0.5 0.5 ]
+274 Factor [< ( KINE29 | false true ) > 0.5 0.5 ]
+275 Factor [< ( VECTOR44 | false true ) > 0.5 0.5 ]
+276 Factor [< ( EQUATION28 | false true ) > 0.6 0.4 ]
+277 Factor [< ( TRY25 | false true ) > 0.1 0.9 ]
+278 Factor [< ( CHOOSE47 | false true ) > 0.5 0.5 ]
+279 Factor [< ( SYSTEM46 | false true ) > 0.5 0.5 ]
+280 Factor [< ( NEWTONS45 | false true ) > 0.5 0.5 ]
+281 Factor [< ( DEFINE23 | false true ) > 0.5 0.5 ]
+282 Factor [< ( IDENTIFY22 | false true ) > 0.5 0.5 ]
+283 Factor [< ( NULL48 | false true ) > 0.5 0.5 ]
+284 Factor [< ( FIND49 | false true ) > 0.5 0.5 ]
+285 Factor [< ( NORMAL50 | false true ) > 0.5 0.5 ]
+286 Factor [< ( STRAT_90 | SNode_92_1 SNode_91_2 ) > 0.5 0.5 ]
+287 Factor [< ( NORMAL52 | false true ) > 0.646 0.354 ]
+288 Factor [< ( IDENTIFY55 | false true ) > 0.5 0.5 ]
+289 Factor [< ( WEIGHT56 | false true ) > 0.3 0.7 ]
+290 Factor [< ( WEIGHT57 | false true ) > 0.3 0.7 ]
+291 Factor [< ( FIND58 | false true ) > 0.7 0.3 ]
+292 Factor [< ( IDENTIFY59 | false true ) > 0.5 0.5 ]
+293 Factor [< ( FORCE60 | false true ) > 0.2 0.8 ]
+294 Factor [< ( APPLY61 | false true ) > 0.5 0.5 ]
+295 Factor [< ( CHOOSE62 | false true ) > 0.5 0.5 ]
+296 Factor [< ( WRITE63 | false true ) > 0.5 0.5 ]
+297 Factor [< ( WRITE64 | false true ) > 0.5 0.5 ]
+298 Factor [< ( GOAL65 | false true ) > 0.5 0.5 ]
+299 Factor [< ( GOAL66 | false true ) > 0.6 0.4 ]
+300 Factor [< ( NEED67 | false true ) > 0.5 0.5 ]
+301 Factor [< ( GOAL68 | false true ) > 0.5 0.5 ]
+302 Factor [< ( VECTOR69 | false true ) > 0.7 0.3 ]
+303 Factor [< ( VECTOR70 | false true ) > 0.1 0.9 ]
+304 Factor [< ( EQUAL71 | false true ) > 0.4 0.6 ]
+305 Factor [< ( GOAL72 | false true ) > 0.5 0.5 ]
+306 Factor [< ( VECTOR73 | false true ) > 0.5 0.5 ]
+307 Factor [< ( NEWTONS74 | false true ) > 0.5 0.5 ]
+308 Factor [< ( SUM75 | false true ) > 0.5 0.5 ]
+309 Factor [< ( TRY76 | false true ) > 0.5 0.5 ]
+310 Factor [< ( APPLY77 | false true ) > 0.5 0.5 ]
+311 Factor [< ( GRAV78 | false true ) > 0.5 0.5 ]
+312 Factor [< ( RApp1 | false true ) ( DISPLACEM0 | false true ) ( SNode_3 | false true ) > 1.0 0.0 1.0 0.0 1.0 0.0 0.0001 0.9999 ]
+313 Factor [< ( RApp2 | false true ) ( GIVEN_1 | false true ) > 1.0 0.0 0.0001 0.9999 ]
+314 Factor [< ( SNode_8 | false true ) ( RApp1 | false true ) ( RApp2 | false true ) > 0.8 0.2 0.0 1.0 0.0 1.0 0.0 1.0 ]
+315 Factor [< ( SNode_20 | false true ) ( SNode_16 | false true ) ( NEED1 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+316 Factor [< ( SNode_21 | false true ) ( SNode_20 | false true ) ( GRAV2 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+317 Factor [< ( SNode_24 | false true ) ( SNode_21 | false true ) ( VALUE3 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+318 Factor [< ( SNode_25 | false true ) ( SNode_15 | false true ) ( SLIDING4 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+319 Factor [< ( SNode_26 | false true ) ( SNode_11 | false true ) ( CONSTANT5 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+320 Factor [< ( SNode_47 | false true ) ( SNode_3 | false true ) ( VELOCITY7 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+321 Factor [< ( RApp3 | false true ) ( KNOWN6 | false true ) ( SNode_26 | false true ) ( SNode_47 | false true ) > 1.0 0.0 1.0 0.0 1.0 0.0 1.0 0.0 1.0 0.0 1.0 0.0 1.0 0.0 0.0001 0.9999 ]
+322 Factor [< ( RApp4 | false true ) ( KNOWN8 | false true ) ( SNode_11 | false true ) > 1.0 0.0 1.0 0.0 1.0 0.0 0.0001 0.9999 ]
+323 Factor [< ( SNode_27 | false true ) ( RApp3 | false true ) ( RApp4 | false true ) > 0.8 0.2 0.0 1.0 0.0 1.0 0.0 1.0 ]
+324 Factor [< ( GOAL_48 | false true ) ( GOAL_2 | false true ) ( COMPO16 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+325 Factor [< ( TRY11 | false true ) ( TRY12 | false true ) > 0.8 0.2 0.0 1.0 ]
+326 Factor [< ( GOAL_49 | false true ) ( SNode_5 | false true ) ( SNode_6 | false true ) ( GOAL_48 | false true ) ( TRY11 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+327 Factor [< ( GOAL_50 | false true ) ( GOAL_49 | false true ) ( CHOOSE19 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+328 Factor [< ( SNode_51 | false true ) ( SNode_17 | false true ) ( GOAL_50 | false true ) ( SYSTEM18 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+329 Factor [< ( SNode_52 | false true ) ( SNode_51 | false true ) ( KINEMATI17 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+330 Factor [< ( GOAL_53 | false true ) ( GOAL_49 | false true ) ( SNode_52 | false true ) ( IDENTIFY10 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+331 Factor [< ( SNode_28 | false true ) ( SNode_27 | false true ) ( GOAL_53 | false true ) ( IDENTIFY9 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+332 Factor [< ( TRY13 | false true ) ( TRY12 | false true ) > 0.8 0.2 0.0 1.0 ]
+333 Factor [< ( TRY14 | false true ) ( TRY12 | false true ) > 0.9 0.1 0.0 1.0 ]
+334 Factor [< ( TRY15 | false true ) ( TRY12 | false true ) > 0.9 0.1 0.0 1.0 ]
+335 Factor [< ( SNode_29 | false true ) ( SNode_28 | false true ) ( VAR20 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+336 Factor [< ( SNode_31 | false true ) ( SNode_29 | false true ) ( VALUE3 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+337 Factor [< ( SNode_33 | false true ) ( SNode_10 | false true ) ( GIVEN21 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+338 Factor [< ( SNode_34 | false true ) ( SNode_10 | false true ) ( CONSTANT5 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+339 Factor [< ( GOAL_56 | false true ) ( GOAL_49 | false true ) ( SNode_52 | false true ) ( APPLY32 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+340 Factor [< ( GOAL_57 | false true ) ( GOAL_56 | false true ) ( CHOOSE35 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+341 Factor [< ( SNode_59 | false true ) ( SNode_7 | false true ) ( GOAL_57 | false true ) ( MAXIMIZE34 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+342 Factor [< ( SNode_60 | false true ) ( SNode_59 | false true ) ( AXIS33 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+343 Factor [< ( GOAL_61 | false true ) ( GOAL_56 | false true ) ( SNode_60 | false true ) ( WRITE31 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+344 Factor [< ( GOAL_62 | false true ) ( GOAL_61 | false true ) ( WRITE30 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+345 Factor [< ( GOAL_63 | false true ) ( SNode_28 | false true ) ( GOAL_62 | false true ) ( RESOLVE37 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+346 Factor [< ( SNode_64 | false true ) ( GOAL_63 | false true ) ( NEED36 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+347 Factor [< ( SNode_41 | false true ) ( SNode_9 | false true ) ( CONSTANT5 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+348 Factor [< ( SNode_42 | false true ) ( SNode_8 | false true ) ( SNode_41 | false true ) ( KNOWN6 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+349 Factor [< ( SNode_43 | false true ) ( SNode_42 | false true ) ( GOAL_53 | false true ) ( IDENTIFY39 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+350 Factor [< ( GOAL_66 | false true ) ( SNode_43 | false true ) ( GOAL_62 | false true ) ( RESOLVE38 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+351 Factor [< ( SNode_67 | false true ) ( GOAL_66 | false true ) ( NEED36 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+352 Factor [< ( SNode_54 | false true ) ( GOAL_53 | false true ) ( IDENTIFY41 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+353 Factor [< ( GOAL_69 | false true ) ( SNode_54 | false true ) ( GOAL_62 | false true ) ( RESOLVE40 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+354 Factor [< ( SNode_70 | false true ) ( GOAL_69 | false true ) ( NEED36 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+355 Factor [< ( SNode_55 | false true ) ( SNode_34 | false true ) ( GOAL_53 | false true ) ( IDENTIFY43 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+356 Factor [< ( GOAL_72 | false true ) ( SNode_55 | false true ) ( GOAL_62 | false true ) ( RESOLVE42 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+357 Factor [< ( SNode_73 | false true ) ( GOAL_72 | false true ) ( NEED36 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+358 Factor [< ( SNode_74 | false true ) ( GOAL_62 | false true ) ( SNode_64 | false true ) ( SNode_67 | false true ) ( SNode_70 | false true ) ( SNode_73 | false true ) ( KINE29 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+359 Factor [< ( SNode_75 | false true ) ( SNode_4 | false true ) ( GOAL_72 | false true ) ( SNode_73 | false true ) ( VECTOR44 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+360 Factor [< ( GOAL_79 | false true ) ( SNode_74 | false true ) ( SNode_75 | false true ) ( EQUATION28 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+361 Factor [< ( RApp5 | false true ) ( VECTOR27 | false true ) ( GOAL_79 | false true ) > 1.0 0.0 1.0 0.0 1.0 0.0 0.0001 0.9999 ]
+362 Factor [< ( GOAL_80 | false true ) ( SNode_75 | false true ) ( EQUATION28 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+363 Factor [< ( RApp6 | false true ) ( COMPO16 | false true ) ( GOAL_80 | false true ) > 1.0 0.0 1.0 0.0 1.0 0.0 0.0001 0.9999 ]
+364 Factor [< ( GOAL_81 | false true ) ( RApp5 | false true ) ( RApp6 | false true ) > 0.8 0.2 0.0 1.0 0.0 1.0 0.0 1.0 ]
+365 Factor [< ( TRY24 | false true ) ( TRY25 | false true ) > 0.95 0.05 0.0 1.0 ]
+366 Factor [< ( GOAL_83 | false true ) ( GOAL_81 | false true ) ( TRY24 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+367 Factor [< ( GOAL_84 | false true ) ( GOAL_83 | false true ) ( CHOOSE47 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+368 Factor [< ( SNode_86 | false true ) ( GOAL_84 | false true ) ( SYSTEM46 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+369 Factor [< ( SNode_156 | false true ) ( SNode_86 | false true ) ( NEWTONS45 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+370 Factor [< ( GOAL_98 | false true ) ( GOAL_83 | false true ) ( SNode_156 | false true ) ( DEFINE23 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+371 Factor [< ( SNode_37 | false true ) ( GOAL_98 | false true ) ( IDENTIFY22 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+372 Factor [< ( TRY26 | false true ) ( TRY25 | false true ) > 0.9 0.1 0.0 1.0 ]
+373 Factor [< ( SNode_38 | false true ) ( SNode_37 | false true ) ( VAR20 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+374 Factor [< ( SNode_40 | false true ) ( SNode_38 | false true ) ( VALUE3 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+375 Factor [< ( SNode_44 | false true ) ( SNode_43 | false true ) ( VAR20 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+376 Factor [< ( SNode_46 | false true ) ( SNode_44 | false true ) ( VALUE3 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+377 Factor [< ( SNode_65 | false true ) ( SNode_29 | false true ) ( GOAL_63 | false true ) ( SNode_64 | false true ) ( NULL48 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+378 Factor [< ( SNode_68 | false true ) ( GOAL_66 | false true ) ( SNode_67 | false true ) ( VECTOR44 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+379 Factor [< ( SNode_71 | false true ) ( GOAL_69 | false true ) ( SNode_70 | false true ) ( VECTOR44 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+380 Factor [< ( GOAL_87 | false true ) ( GOAL_83 | false true ) ( SNode_156 | false true ) ( FIND49 | false true ) > 0.7 0.3 0.7 0.3 0.7 0.3 0.7 0.3 0.7 0.3 0.7 0.3 0.7 0.3 7e-05 0.99993 ]
+381 Factor [< ( SNode_88 | false true ) ( SNode_25 | false true ) ( GOAL_87 | false true ) ( NORMAL50 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+382 Factor [< ( INCLINE51 | false true ) ( NORMAL52 | false true ) > 1.0 0.0 0.0 1.0 ]
+383 Factor [< ( SNode_91 | false true ) ( SNode_88 | false true ) ( SNode_12 | false true ) ( SNode_13 | false true ) ( STRAT_90 | SNode_92_1 SNode_91_2 ) ( INCLINE51 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+384 Factor [< ( HORIZ53 | false true ) ( NORMAL52 | false true ) > 0.8 0.2 0.0 1.0 ]
+385 Factor [< ( BUGGY54 | false true ) ( NORMAL52 | false true ) > 0.2 0.8 1.0 0.0 ]
+386 Factor [< ( SNode_92 | false true ) ( SNode_12 | false true ) ( STRAT_90 | SNode_92_1 SNode_91_2 ) ( BUGGY54 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 0.8 0.2 0.8 0.2 ]
+387 Factor [< ( SNode_93 | false true ) ( GOAL_87 | false true ) ( SNode_88 | false true ) ( IDENTIFY55 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+388 Factor [< ( SNode_94 | false true ) ( SNode_16 | false true ) ( SNode_33 | false true ) ( GOAL_87 | false true ) ( WEIGHT56 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+389 Factor [< ( SNode_95 | false true ) ( SNode_94 | false true ) ( WEIGHT57 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+390 Factor [< ( SNode_97 | false true ) ( GOAL_87 | false true ) ( SNode_94 | false true ) ( IDENTIFY55 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+391 Factor [< ( GOAL_99 | false true ) ( GOAL_98 | false true ) ( FIND58 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+392 Factor [< ( SNode_100 | false true ) ( GOAL_98 | false true ) ( IDENTIFY59 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+393 Factor [< ( SNode_102 | false true ) ( GOAL_87 | false true ) ( SNode_88 | false true ) ( SNode_94 | false true ) ( FORCE60 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+394 Factor [< ( GOAL_103 | false true ) ( GOAL_83 | false true ) ( SNode_102 | false true ) ( APPLY61 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+395 Factor [< ( GOAL_104 | false true ) ( GOAL_103 | false true ) ( CHOOSE62 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+396 Factor [< ( SNode_106 | false true ) ( GOAL_104 | false true ) ( MAXIMIZE34 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+397 Factor [< ( SNode_152 | false true ) ( SNode_106 | false true ) ( AXIS33 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+398 Factor [< ( GOAL_107 | false true ) ( GOAL_103 | false true ) ( SNode_152 | false true ) ( WRITE63 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+399 Factor [< ( GOAL_108 | false true ) ( GOAL_107 | false true ) ( WRITE64 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+400 Factor [< ( GOAL_109 | false true ) ( GOAL_107 | false true ) ( WRITE64 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+401 Factor [< ( GOAL_110 | false true ) ( GOAL_109 | false true ) ( GOAL65 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+402 Factor [< ( GOAL_111 | false true ) ( GOAL_109 | false true ) ( GOAL66 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+403 Factor [< ( RApp7 | false true ) ( NEED67 | false true ) ( GOAL_109 | false true ) > 1.0 0.0 1.0 0.0 1.0 0.0 0.0001 0.9999 ]
+404 Factor [< ( RApp8 | false true ) ( NEED36 | false true ) ( GOAL_111 | false true ) > 1.0 0.0 1.0 0.0 1.0 0.0 0.0001 0.9999 ]
+405 Factor [< ( SNode_112 | false true ) ( RApp7 | false true ) ( RApp8 | false true ) > 0.8 0.2 0.0 1.0 0.0 1.0 0.0 1.0 ]
+406 Factor [< ( GOAL_113 | false true ) ( GOAL_110 | false true ) ( GOAL68 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+407 Factor [< ( GOAL_114 | false true ) ( GOAL_110 | false true ) ( GOAL68 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+408 Factor [< ( SNode_115 | false true ) ( GOAL_114 | false true ) ( NEED36 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+409 Factor [< ( SNode_116 | false true ) ( SNode_95 | false true ) ( SNode_97 | false true ) ( GOAL_114 | false true ) ( SNode_115 | false true ) ( VECTOR69 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+410 Factor [< ( SNode_117 | false true ) ( GOAL_113 | false true ) ( NEED36 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+411 Factor [< ( SNode_118 | false true ) ( SNode_91 | false true ) ( GOAL_113 | false true ) ( VECTOR70 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+412 Factor [< ( SNode_119 | false true ) ( SNode_93 | false true ) ( SNode_117 | false true ) ( SNode_118 | false true ) ( EQUAL71 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+413 Factor [< ( SNode_120 | false true ) ( SNode_92 | false true ) ( SNode_93 | false true ) ( GOAL_113 | false true ) ( SNode_117 | false true ) ( VECTOR69 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+414 Factor [< ( GOAL_121 | false true ) ( GOAL_109 | false true ) ( GOAL72 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+415 Factor [< ( SNode_122 | false true ) ( GOAL_121 | false true ) ( NEED36 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+416 Factor [< ( SNode_123 | false true ) ( SNode_4 | false true ) ( SNode_100 | false true ) ( GOAL_121 | false true ) ( SNode_122 | false true ) ( VECTOR73 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+417 Factor [< ( SNode_124 | false true ) ( SNode_37 | false true ) ( GOAL_109 | false true ) ( SNode_112 | false true ) ( SNode_122 | false true ) ( NEWTONS74 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+418 Factor [< ( SNode_125 | false true ) ( GOAL_109 | false true ) ( SNode_112 | false true ) ( SUM75 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+419 Factor [< ( GOAL_126 | false true ) ( GOAL_108 | false true ) ( GOAL65 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+420 Factor [< ( GOAL_127 | false true ) ( GOAL_108 | false true ) ( GOAL66 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+421 Factor [< ( RApp9 | false true ) ( NEED67 | false true ) ( GOAL_108 | false true ) > 1.0 0.0 1.0 0.0 1.0 0.0 0.0001 0.9999 ]
+422 Factor [< ( RApp10 | false true ) ( NEED36 | false true ) ( GOAL_127 | false true ) > 1.0 0.0 1.0 0.0 1.0 0.0 0.0001 0.9999 ]
+423 Factor [< ( SNode_128 | false true ) ( RApp9 | false true ) ( RApp10 | false true ) > 0.8 0.2 0.0 1.0 0.0 1.0 0.0 1.0 ]
+424 Factor [< ( GOAL_129 | false true ) ( GOAL_126 | false true ) ( GOAL68 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+425 Factor [< ( GOAL_130 | false true ) ( GOAL_126 | false true ) ( GOAL68 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+426 Factor [< ( SNode_131 | false true ) ( GOAL_130 | false true ) ( NEED36 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+427 Factor [< ( SNode_132 | false true ) ( SNode_95 | false true ) ( SNode_97 | false true ) ( GOAL_130 | false true ) ( SNode_131 | false true ) ( VECTOR69 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+428 Factor [< ( SNode_133 | false true ) ( GOAL_129 | false true ) ( NEED36 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+429 Factor [< ( SNode_134 | false true ) ( SNode_91 | false true ) ( SNode_93 | false true ) ( GOAL_129 | false true ) ( SNode_133 | false true ) ( VECTOR73 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+430 Factor [< ( SNode_135 | false true ) ( SNode_92 | false true ) ( SNode_93 | false true ) ( GOAL_129 | false true ) ( SNode_133 | false true ) ( VECTOR69 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+431 Factor [< ( SNode_154 | false true ) ( GOAL_121 | false true ) ( NEED36 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+432 Factor [< ( SNode_136 | false true ) ( SNode_37 | false true ) ( GOAL_108 | false true ) ( SNode_128 | false true ) ( SNode_154 | false true ) ( NEWTONS74 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+433 Factor [< ( SNode_137 | false true ) ( GOAL_108 | false true ) ( SNode_128 | false true ) ( SUM75 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+434 Factor [< ( GOAL_142 | false true ) ( SNode_116 | false true ) ( SNode_125 | false true ) ( EQUATION28 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+435 Factor [< ( GOAL_143 | false true ) ( SNode_116 | false true ) ( SNode_132 | false true ) ( EQUATION28 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+436 Factor [< ( GOAL_146 | false true ) ( SNode_132 | false true ) ( SNode_137 | false true ) ( EQUATION28 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+437 Factor [< ( RApp11 | false true ) ( VECTOR27 | false true ) ( GOAL_142 | false true ) > 1.0 0.0 1.0 0.0 1.0 0.0 0.0001 0.9999 ]
+438 Factor [< ( RApp12 | false true ) ( COMPO16 | false true ) ( GOAL_143 | false true ) > 1.0 0.0 1.0 0.0 1.0 0.0 0.0001 0.9999 ]
+439 Factor [< ( RApp13 | false true ) ( VECTOR27 | false true ) ( GOAL_146 | false true ) > 1.0 0.0 1.0 0.0 1.0 0.0 0.0001 0.9999 ]
+440 Factor [< ( GOAL_147 | false true ) ( RApp11 | false true ) ( RApp12 | false true ) ( RApp13 | false true ) > 0.8 0.2 0.0 1.0 0.0 1.0 0.0 1.0 0.0 1.0 0.0 1.0 0.0 1.0 0.0 1.0 ]
+441 Factor [< ( GOAL_149 | false true ) ( GOAL_147 | false true ) ( TRY76 | false true ) > 0.7 0.3 0.7 0.3 0.7 0.3 7e-05 0.99993 ]
+442 Factor [< ( GOAL_150 | false true ) ( SNode_20 | false true ) ( SNode_37 | false true ) ( GOAL_149 | false true ) ( APPLY77 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+443 Factor [< ( SNode_151 | false true ) ( GOAL_150 | false true ) ( GRAV78 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+444 Factor [< ( GOAL_153 | false true ) ( GOAL_108 | false true ) ( GOAL72 | false true ) > 0.8 0.2 0.8 0.2 0.8 0.2 8e-05 0.99992 ]
+445 Factor [< ( SNode_155 | false true ) ( SNode_4 | false true ) ( SNode_100 | false true ) ( GOAL_153 | false true ) ( SNode_154 | false true ) ( VECTOR44 | false true ) > 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 0.9 0.1 9e-05 0.99991 ]
+229 -> 8
+224 -> 8
+230 -> 10
+312 -> 11
+313 -> 11
+238 -> 24
+242 -> 24
+315 -> 26
+243 -> 26
+316 -> 28
+244 -> 28
+237 -> 30
+245 -> 30
+233 -> 32
+246 -> 32
+224 -> 35
+248 -> 35
+247 -> 36
+319 -> 36
+320 -> 36
+249 -> 38
+233 -> 38
+321 -> 39
+322 -> 39
+223 -> 41
+250 -> 41
+251 -> 43
+226 -> 44
+227 -> 44
+324 -> 44
+325 -> 44
+326 -> 46
+252 -> 46
+239 -> 48
+327 -> 48
+253 -> 48
+328 -> 50
+254 -> 50
+326 -> 52
+329 -> 52
+255 -> 52
+323 -> 54
+330 -> 54
+256 -> 54
+251 -> 55
+251 -> 56
+251 -> 57
+331 -> 59
+257 -> 59
+335 -> 60
+244 -> 60
+232 -> 62
+258 -> 62
+232 -> 63
+246 -> 63
+326 -> 66
+329 -> 66
+260 -> 66
+339 -> 68
+261 -> 68
+228 -> 70
+340 -> 70
+262 -> 70
+341 -> 72
+263 -> 72
+339 -> 74
+342 -> 74
+264 -> 74
+343 -> 76
+265 -> 76
+331 -> 78
+344 -> 78
+266 -> 78
+345 -> 80
+267 -> 80
+231 -> 81
+246 -> 81
+314 -> 82
+347 -> 82
+247 -> 82
+348 -> 84
+330 -> 84
+268 -> 84
+349 -> 86
+344 -> 86
+269 -> 86
+350 -> 87
+267 -> 87
+330 -> 89
+270 -> 89
+352 -> 91
+344 -> 91
+271 -> 91
+353 -> 92
+267 -> 92
+338 -> 94
+330 -> 94
+272 -> 94
+355 -> 96
+344 -> 96
+273 -> 96
+356 -> 97
+267 -> 97
+344 -> 99
+346 -> 99
+351 -> 99
+354 -> 99
+357 -> 99
+274 -> 99
+225 -> 101
+356 -> 101
+357 -> 101
+275 -> 101
+358 -> 103
+359 -> 103
+276 -> 103
+259 -> 104
+360 -> 104
+359 -> 105
+276 -> 105
+250 -> 106
+362 -> 106
+361 -> 107
+363 -> 107
+277 -> 109
+364 -> 110
+365 -> 110
+366 -> 112
+278 -> 112
+367 -> 114
+279 -> 114
+368 -> 116
+280 -> 116
+366 -> 118
+369 -> 118
+281 -> 118
+370 -> 120
+282 -> 120
+277 -> 121
+371 -> 122
+257 -> 122
+373 -> 123
+244 -> 123
+349 -> 124
+257 -> 124
+375 -> 125
+244 -> 125
+335 -> 127
+345 -> 127
+346 -> 127
+283 -> 127
+350 -> 128
+351 -> 128
+275 -> 128
+353 -> 129
+354 -> 129
+275 -> 129
+366 -> 131
+369 -> 131
+284 -> 131
+318 -> 133
+380 -> 133
+285 -> 133
+287 -> 136
+381 -> 137
+234 -> 137
+235 -> 137
+286 -> 137
+382 -> 137
+287 -> 138
+287 -> 139
+234 -> 140
+286 -> 140
+385 -> 140
+380 -> 142
+381 -> 142
+288 -> 142
+238 -> 144
+337 -> 144
+380 -> 144
+289 -> 144
+388 -> 146
+290 -> 146
+380 -> 147
+388 -> 147
+288 -> 147
+370 -> 149
+291 -> 149
+370 -> 151
+292 -> 151
+380 -> 153
+381 -> 153
+388 -> 153
+293 -> 153
+366 -> 155
+393 -> 155
+294 -> 155
+394 -> 157
+295 -> 157
+395 -> 158
+262 -> 158
+396 -> 159
+263 -> 159
+394 -> 161
+397 -> 161
+296 -> 161
+398 -> 163
+297 -> 163
+398 -> 164
+297 -> 164
+400 -> 166
+298 -> 166
+400 -> 168
+299 -> 168
+300 -> 170
+400 -> 170
+267 -> 171
+402 -> 171
+403 -> 172
+404 -> 172
+401 -> 174
+301 -> 174
+401 -> 175
+301 -> 175
+407 -> 176
+267 -> 176
+389 -> 178
+390 -> 178
+407 -> 178
+408 -> 178
+302 -> 178
+406 -> 179
+267 -> 179
+383 -> 181
+406 -> 181
+303 -> 181
+387 -> 183
+410 -> 183
+411 -> 183
+304 -> 183
+386 -> 184
+387 -> 184
+406 -> 184
+410 -> 184
+302 -> 184
+400 -> 186
+305 -> 186
+414 -> 187
+267 -> 187
+225 -> 189
+392 -> 189
+414 -> 189
+415 -> 189
+306 -> 189
+371 -> 191
+400 -> 191
+405 -> 191
+415 -> 191
+307 -> 191
+400 -> 193
+405 -> 193
+308 -> 193
+399 -> 194
+298 -> 194
+399 -> 195
+299 -> 195
+300 -> 196
+399 -> 196
+267 -> 197
+420 -> 197
+421 -> 198
+422 -> 198
+419 -> 199
+301 -> 199
+419 -> 200
+301 -> 200
+425 -> 201
+267 -> 201
+389 -> 202
+390 -> 202
+425 -> 202
+426 -> 202
+302 -> 202
+424 -> 203
+267 -> 203
+383 -> 204
+387 -> 204
+424 -> 204
+428 -> 204
+306 -> 204
+386 -> 205
+387 -> 205
+424 -> 205
+428 -> 205
+302 -> 205
+414 -> 206
+267 -> 206
+371 -> 207
+399 -> 207
+423 -> 207
+431 -> 207
+307 -> 207
+399 -> 208
+423 -> 208
+308 -> 208
+409 -> 209
+418 -> 209
+276 -> 209
+409 -> 210
+427 -> 210
+276 -> 210
+427 -> 211
+433 -> 211
+276 -> 211
+259 -> 212
+434 -> 212
+250 -> 213
+435 -> 213
+259 -> 214
+436 -> 214
+437 -> 215
+438 -> 215
+439 -> 215
+440 -> 217
+309 -> 217
+315 -> 219
+371 -> 219
+441 -> 219
+310 -> 219
+442 -> 221
+311 -> 221
+399 -> 222
+305 -> 222
+225 -> 223
+392 -> 223
+444 -> 223
+431 -> 223
+275 -> 223
+223 ->   1
+224 ->   2
+225 ->   3
+226 ->   4
+227 ->   5
+228 ->   6
+229 ->   7
+312 ->   8
+230 ->   9
+313 ->  10
+314 ->  11
+231 ->  12
+232 ->  13
+233 ->  14
+234 ->  15
+235 ->  16
+236 ->  17
+237 ->  18
+238 ->  19
+239 ->  20
+240 ->  21
+241 ->  22
+242 ->  23
+315 ->  24
+243 ->  25
+316 ->  26
+244 ->  27
+317 ->  28
+245 ->  29
+318 ->  30
+246 ->  31
+319 ->  32
+247 ->  33
+248 ->  34
+320 ->  35
+321 ->  36
+249 ->  37
+322 ->  38
+323 ->  39
+250 ->  40
+324 ->  41
+251 ->  42
+325 ->  43
+326 ->  44
+252 ->  45
+327 ->  46
+253 ->  47
+328 ->  48
+254 ->  49
+329 ->  50
+255 ->  51
+330 ->  52
+256 ->  53
+331 ->  54
+332 ->  55
+333 ->  56
+334 ->  57
+257 ->  58
+335 ->  59
+336 ->  60
+258 ->  61
+337 ->  62
+338 ->  63
+259 ->  64
+260 ->  65
+339 ->  66
+261 ->  67
+340 ->  68
+262 ->  69
+341 ->  70
+263 ->  71
+342 ->  72
+264 ->  73
+343 ->  74
+265 ->  75
+344 ->  76
+266 ->  77
+345 ->  78
+267 ->  79
+346 ->  80
+347 ->  81
+348 ->  82
+268 ->  83
+349 ->  84
+269 ->  85
+350 ->  86
+351 ->  87
+270 ->  88
+352 ->  89
+271 ->  90
+353 ->  91
+354 ->  92
+272 ->  93
+355 ->  94
+273 ->  95
+356 ->  96
+357 ->  97
+274 ->  98
+358 ->  99
+275 -> 100
+359 -> 101
+276 -> 102
+360 -> 103
+361 -> 104
+362 -> 105
+363 -> 106
+364 -> 107
+277 -> 108
+365 -> 109
+366 -> 110
+278 -> 111
+367 -> 112
+279 -> 113
+368 -> 114
+280 -> 115
+369 -> 116
+281 -> 117
+370 -> 118
+282 -> 119
+371 -> 120
+372 -> 121
+373 -> 122
+374 -> 123
+375 -> 124
+376 -> 125
+283 -> 126
+377 -> 127
+378 -> 128
+379 -> 129
+284 -> 130
+380 -> 131
+285 -> 132
+381 -> 133
+286 -> 134
+287 -> 135
+382 -> 136
+383 -> 137
+384 -> 138
+385 -> 139
+386 -> 140
+288 -> 141
+387 -> 142
+289 -> 143
+388 -> 144
+290 -> 145
+389 -> 146
+390 -> 147
+291 -> 148
+391 -> 149
+292 -> 150
+392 -> 151
+293 -> 152
+393 -> 153
+294 -> 154
+394 -> 155
+295 -> 156
+395 -> 157
+396 -> 158
+397 -> 159
+296 -> 160
+398 -> 161
+297 -> 162
+399 -> 163
+400 -> 164
+298 -> 165
+401 -> 166
+299 -> 167
+402 -> 168
+300 -> 169
+403 -> 170
+404 -> 171
+405 -> 172
+301 -> 173
+406 -> 174
+407 -> 175
+408 -> 176
+302 -> 177
+409 -> 178
+410 -> 179
+303 -> 180
+411 -> 181
+304 -> 182
+412 -> 183
+413 -> 184
+305 -> 185
+414 -> 186
+415 -> 187
+306 -> 188
+416 -> 189
+307 -> 190
+417 -> 191
+308 -> 192
+418 -> 193
+419 -> 194
+420 -> 195
+421 -> 196
+422 -> 197
+423 -> 198
+424 -> 199
+425 -> 200
+426 -> 201
+427 -> 202
+428 -> 203
+429 -> 204
+430 -> 205
+431 -> 206
+432 -> 207
+433 -> 208
+434 -> 209
+435 -> 210
+436 -> 211
+437 -> 212
+438 -> 213
+439 -> 214
+440 -> 215
+309 -> 216
+441 -> 217
+310 -> 218
+442 -> 219
+311 -> 220
+443 -> 221
+444 -> 222
+445 -> 223

@@ -89,7 +89,7 @@ def convert2BBNF(string_in, file_out = open("/Users/brenowcarvalho/Documents/BBN
     for cpd_count in range(len(cpds_keys)):
         #f_vars = " ".join(cpds_keys[cpd_count])
         f_vars = map(str_vars.get, cpds_keys[cpd_count])
-        file_out.write("%02d Factor [< %s > %s]\n" %(cpd_count, " ".join(f_vars), " ".join(map(str,cpds[cpds_keys[cpd_count]]))))
+        file_out.write("%02d Factor [< %s > %s]\n" %(cpd_count+len(vars_keys), " ".join(f_vars), " ".join(map(str,cpds[cpds_keys[cpd_count]]))))
 
     len_vars = len(vars)
     for sc_count in range(len(cpds_keys)):

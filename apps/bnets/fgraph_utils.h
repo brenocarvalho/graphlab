@@ -1,15 +1,17 @@
 /*
-*  \author: Breno Carvalho
-*/
+ *  \author: Breno Carvalho
+ */
 
 #ifndef FACTOR_GRAPH_NETWORK_UTILS_HPP
 #define FACTOR_GRAPH_NETWORK_UTILS_HPP
 
 #include <graphlab.hpp>
 
-/*#include <../../../toolkits/graphical_models/factors/factor_graph.hpp>
+/*
+#include <../../../toolkits/graphical_models/factors/factor_graph.hpp>
 #include <../../../toolkits/graphical_models/factors/bp_vertex_program.hpp>
-#include <../../../toolkits/graphical_models/factors/bp_graph_data.h>*/
+#include <../../../toolkits/graphical_models/factors/bp_graph_data.h>
+*/
 #include <../../../apps/bnets/csv_reader.h>
 #include <math.h>
 
@@ -30,7 +32,7 @@ typedef std::vector<double> cpd_type;
 
 class VerticeObject{
     public:
-        virtual scope_type const getScope() =0;
+        virtual scope_type const& getScope() const =0;
 };
 
 class RandomVariable : public VerticeObject{
@@ -50,7 +52,7 @@ class RandomVariable : public VerticeObject{
 
         std::vector<std::string> const& getValues() const {return values;}
 
-        size_t positionOfValue(std::string const& value) const{
+        int positionOfValue(std::string const& value) const{
             for(int out = 0; out < values.size(); out++){
                 if(values[out] == value){
                     return out;
@@ -71,7 +73,7 @@ class RandomVariable : public VerticeObject{
         }
 
         friend std::ostream& operator<<(std::ostream& os, const RandomVariable& var){
-            os << "( " << var.name << " | ";
+            os << "( " << var.name << " |";
             std::vector<std::string>::const_iterator iter = var.values.begin();
             if( iter != var.values.end()){
                 //os << *iter; iter ++;
@@ -79,7 +81,7 @@ class RandomVariable : public VerticeObject{
                     os << " " << *iter;
                 }
             }
-            os << ")";
+            os << " )";
             return os;
         };
 
@@ -120,7 +122,7 @@ class RandomVariable : public VerticeObject{
                         while(ss >> tmp && tmp != ")"){
                             v_list.push_back(tmp);
                         }
-                            v_list.push_back("None");
+                            //v_list.push_back("None");
                     }
                 }
             }
@@ -130,7 +132,7 @@ class RandomVariable : public VerticeObject{
         }
 
         //TODO check if it is safe
-        scope_type const getScope(){return scope_type(1, *this);};
+        scope_type const& getScope() const{return scope_type(1, *this);}
 };
 
 
@@ -145,24 +147,16 @@ class Factor : public VerticeObject{
         attribution_type scope_sizes;
         cpd_type cpd;
 
+    public:
         static scope_type scopeUnion(scope_type const& s1,scope_type const& s2){
             scope_type out;
-            scope_type const* bigger; scope_type const* smaller;
-            if(s1.size() >= s2.size()){
-                bigger = &s1;
-                smaller = &s2;
-            }else{
-                bigger = &s2;
-                smaller = &s1;
-            }
-
-            for(scope_type::const_iterator iter = bigger->begin();
-            iter != bigger->end(); iter++){
+            for(scope_type::const_iterator iter = s1.begin();
+            iter != s1.end(); iter++){
                 out.push_back(*iter);
             }
-            for(scope_type::const_iterator iter = smaller->begin();
-            iter != smaller->end(); iter++){
-                if(!hasVariable(*bigger, *iter)){
+            for(scope_type::const_iterator iter = s2.begin();
+            iter != s2.end(); iter++){
+                if(!hasVariable(s1, *iter)){
                     out.push_back(*iter);//out->push_back(tmp);
                 }
             }
@@ -187,6 +181,10 @@ class Factor : public VerticeObject{
             return out;
         }
 
+        //If the second scope variables are in the first scope, it returns an
+        //attribution_type object of the same size of the second scope such that
+        //the numbers in each position correspond to the position of the variable in the first scope
+        //E.g.: attribution_type([a,b,c,d], [b, c]) = [1,2]
         static attribution_type getAttribMap(scope_type const& from_scope, scope_type const& to_scope){
             attribution_type out(to_scope.size(), 0);
             int count, i = 0;
@@ -203,6 +201,8 @@ class Factor : public VerticeObject{
             }
             return out;
         }
+
+        //Returns an attribution of values in attrib filtered by attrib_map
         static attribution_type applyAttribMap(attribution_type const& attrib, attribution_type const& attrib_map){
             attribution_type out(attrib_map.size(),0);
             int count=0;
@@ -211,6 +211,7 @@ class Factor : public VerticeObject{
             }
             return out;
         }
+
 
         static double& getValue(attribution_type const& scope_sizes, cpd_type& cpd, attribution_type const& assignment){
             int count;
@@ -227,10 +228,11 @@ class Factor : public VerticeObject{
             return cpd[count];
         }
 
-    public:
-        scope_type const getScope(){return scope;};
+        scope_type const& getScope() const{return scope;}
 
-        cpd_type const getCPD(){return cpd;};
+        attribution_type const& getScopeSizes() const {return scope_sizes;}
+
+        cpd_type const& getCPD() const{return cpd;}
 
         static bool hasVariable(scope_type const& scope, RandomVariable const& var){
             for(scope_type::const_iterator iter = scope.begin();
@@ -241,7 +243,8 @@ class Factor : public VerticeObject{
             }
             return false;
         }
-        bool hasVariable(RandomVariable const& var) const{
+
+        inline bool hasVariable(RandomVariable const& var) const{
             return Factor::hasVariable(scope, var);
         }
 
@@ -250,7 +253,7 @@ class Factor : public VerticeObject{
         Factor(scope_type const& scope_list, cpd_type const& values){
             cpd   = values;
             scope = scope_list;
-            scope_sizes = attribution_type(scope_list.size(), 1);
+            scope_sizes = attribution_type(scope.size(), 1);
             //int cpd_size = 1;
             int count = 0;
             for(scope_type::const_iterator i = scope.begin();
@@ -258,13 +261,14 @@ class Factor : public VerticeObject{
                 scope_sizes[count] = i->getValues().size();
                 //cpd_size *= i->getValues().size()
             }
-        };
+        }
 
         /**
         *Normalizes the factor towards it's first variable.
         **/
         void normalize(){
             double z = 0.0;
+            if(scope.size() < 1){return;}
             if(scope.size() == 1){
                 for(cpd_type::const_iterator iter = cpd.begin(); iter != cpd.end(); iter++){
                     z += *iter;
@@ -275,22 +279,22 @@ class Factor : public VerticeObject{
                     }
                 }
             }else{
-                size_t cpd_size, var_size, sub_cpd_size;
+                int cpd_size, var_size, sub_cpd_size;
                 cpd_size = cpd.size();
                 var_size = scope[0].getValues().size();
                 sub_cpd_size = cpd_size / var_size;
 
                 //For each value of the first variable in the cpd:
-                for(size_t iter = 0; iter < sub_cpd_size; iter++){
+                for(int first_var_iter = 0; first_var_iter < var_size; first_var_iter++){
                     z = 0.0;
                     //For each assignment in the cpd which the first variable is equals to 'first_var_iter':
-                    for(size_t first_var_iter = 0; first_var_iter < var_size; first_var_iter++){
+                    for(int iter = 0; iter < sub_cpd_size; iter++){
                         z += cpd[iter + sub_cpd_size*first_var_iter];
                         }
                     //For each assignment in the cpd which the first variable is equals to 'first_var_iter':
                     //If z is not zero or way too small do:
                     if(z > 1e-10 || -z > 1e-10){
-                        for(size_t first_var_iter = 0; first_var_iter < var_size; first_var_iter++){
+                        for(int iter = 0; iter < sub_cpd_size; iter++){
                             //Divide by the sum of the values, normalize
                             cpd[iter + sub_cpd_size*first_var_iter] /= z;
                         }
@@ -315,18 +319,20 @@ class Factor : public VerticeObject{
 
         double& operator[](attribution_type const& idx) {
             return getValue(scope_sizes, cpd, idx);
-        };
+        }
+
         double const& operator[](attribution_type const& idx) const {
             return const_cast<Factor&>(*this)[idx];
-        };
+        }
 
         Factor& operator*=(Factor const& rhs){
             scope_type old_scope = this->scope;
             attribution_type old_scope_sizes = this->scope_sizes;
             cpd_type old_cpd = this->cpd;
             this->scope = scopeUnion(this->scope, rhs.scope);
+            //std::cout << "SCOPE (*=) 0:" << this->scope[0];
             this->scope_sizes = attribution_type(this->scope.size(), 1);
-            int cpd_size = 1; unsigned int count = 0;
+            int cpd_size = 1; int count = 0;
             for(scope_type::const_iterator i = this->scope.begin();
             i != this->scope.end(); i++, count++){
                 this->scope_sizes[count] = i->getValues().size();
@@ -338,15 +344,15 @@ class Factor : public VerticeObject{
             attribution_type attrib_map_right = getAttribMap(this->scope, rhs.scope);
             count = 0;
             while(count < this->cpd.size()){
-                for(int val = 0; val < this->scope_sizes[0]; val++){
-                    attrib[0] = val;
+                for(int val = 0; val < this->scope_sizes[this->scope_sizes.size()-1]; val++){
+                    attrib[this->scope_sizes.size()-1] = val;
                     //multiplication
                     double mult = getValue(old_scope_sizes, old_cpd, applyAttribMap(attrib, attrib_map_left));
                     mult *= rhs[applyAttribMap(attrib, attrib_map_right)];
                     this->cpd[count] = mult;
                     count++;
                 }
-                for(unsigned int var_pos = 0; var_pos < this->scope_sizes.size(); var_pos++){
+                for(int var_pos = this->scope_sizes.size()-1; var_pos >= 0; var_pos--){
                     attrib[var_pos] += 1;
                     if(attrib[var_pos] == this->scope_sizes[var_pos]){
                         attrib[var_pos] = 0;
@@ -364,7 +370,7 @@ class Factor : public VerticeObject{
 
         //created only for compatibility with graphlab::aggregator_type
         Factor operator+=(Factor const& rhs){
-            return this->operator*=(rhs);
+            return *this;//->operator*=(rhs);
         }
 
         inline Factor marginalize(RandomVariable const& var) const{
@@ -376,10 +382,16 @@ class Factor : public VerticeObject{
         }
 
         Factor marginalize(scope_type const& vars) const{
-            if (this->scope.size() == 0){
+            if(this->scope.size() == 0){
+                throw "Cannot marginalize an empty Factor";
+            }
+            if(vars.size() == 0){
                 return *this;
             }
             scope_type new_scope = scopeMinus(this->scope, vars);
+            if(new_scope.size() == 0){
+                return Factor(new_scope, cpd_type(1,0.0));
+            }
             int cpd_size = 1;
             for(scope_type::const_iterator i = new_scope.begin();
             i != new_scope.end(); i++){
@@ -391,7 +403,7 @@ class Factor : public VerticeObject{
             attribution_type attrib = attribution_type(this->scope.size(), 0);
             attribution_type new_f_attrib_map = getAttribMap(this->scope, new_scope);
 
-            unsigned int count = 0;
+            int count = 0;
             while(count < this->cpd.size()){
                 for(int val = 0; val < this->scope_sizes[0]; val++){
                     attrib[0] = val;
@@ -399,7 +411,7 @@ class Factor : public VerticeObject{
                     count++;
                 }
 
-                for(unsigned int var_pos = 0; var_pos < this->scope_sizes.size(); var_pos++){
+                for(int var_pos = 0; var_pos < this->scope_sizes.size(); var_pos++){
                     attrib[var_pos] += 1;
                     if(attrib[var_pos] == this->scope_sizes[var_pos]){
                         attrib[var_pos] = 0;
@@ -421,7 +433,7 @@ class Factor : public VerticeObject{
         }
 
         Factor setEvidence(scope_type const& vars, std::vector<std::string> const& values) const{
-            std::vector<size_t> int_values(values.size(), 0);
+            std::vector<int> int_values(values.size(), 0);
 
             for(int count = 0; count < vars.size() && count < values.size(); count++){
                 int_values[count] = vars[count].positionOfValue(values[count]);
@@ -434,46 +446,41 @@ class Factor : public VerticeObject{
             return setEvidence(var, var.positionOfValue(value));
         }
 
-        Factor setEvidence(scope_type const& vars, std::vector<size_t> const& values) const{
+        Factor setEvidence(scope_type const& vars, std::vector<int> const& values) const{
             Factor new_factor(this->scope, this->cpd);
 
             //* It seems a lot of fors chained.
-            //* Don't worry, the complexity of it is still O(vars.size()*new_factor.scope.size()).
+            //* Don't worry, the complexity of it is still O(vars.size()*new_factor.cpd.size()).
             //For each variable in the vars vector
             for(int var_count = 0; var_count < vars.size() && var_count < values.size(); var_count++){
-                int pre_size = 1;
-                //Find out if it is in the factor, suppose no matching ordenation
-                for(size_t var_pos = 0; var_pos < new_factor.scope.size(); var_pos++){
+                int prev_var_size = 1;
+                for(int var_pos = 0; var_pos < new_factor.scope.size(); var_pos++){
                     if(new_factor.scope[var_pos] == vars[var_count]){
-                        //* Here I break the loop thoughout the cpd in several smaller ones in order to evidence correctly
-                        //* pre_partition breaks the cpd in chunks of the size of a cpd made of the variables that preced the variable to evidence
-                        //* curr_part breaks the remaining in values[var_pos].size() chunks
-                        //For each partion created using pre_partition
-                        for(int pre_partition = 0; pre_partition < this->cpd.size()/pre_size; pre_partition++){
-                            size_t var_values_size = new_factor.scope[var_pos].getValues().size();
-                            //For each value of the evidenced variable
-                            for(int value = 0; value < var_values_size; value++){
-                                double& to_update = new_factor.cpd[pre_size*pre_partition + var_values_size*value];
-                                if(value == values[var_pos]){
-                                    //If it is the main variable set it to one, useful in bayesian nets
-                                    if(var_pos == 0){
-                                        to_update = (to_update == 0.)? 0. : 1.;
+                        int value = values[var_count];
+                        int curr_var_size = new_factor.scope[var_pos].getValues().size();
+                        int next_var_size = new_factor.cpd.size()/(curr_var_size*prev_var_size);
+                        for(int prev_var_count = 0; prev_var_count < prev_var_size; prev_var_count++){
+                            for(int next_var_count = 0; next_var_count < next_var_size; next_var_count++){
+                                for(int value_count = 0; value_count < curr_var_size; value_count++){
+                                    double& to_update = new_factor.cpd[(prev_var_count*curr_var_size + value_count)*next_var_size + next_var_count];
+                                    if(!(value_count == value)){
+                                        to_update = 0.0;
                                     }
-                                }else{
-                                    to_update = 0.;
+                                    //std::cout << "curr_var_size = " << curr_var_size;
                                 }
                             }
                         }
                         break;
                     }
-                    pre_size *= new_factor.scope[var_pos].getValues().size();
+                    prev_var_size *= new_factor.scope[var_pos].getValues().size();
                 }
             }
+            new_factor.normalize();
             return new_factor;
         }
 
-        Factor setEvidence(RandomVariable const& var, size_t const& value) const{
-            return setEvidence(scope_type(1, var), std::vector<size_t>(1, value));
+        Factor setEvidence(RandomVariable const& var, int const& value) const{
+            return setEvidence(scope_type(1, var), std::vector<int>(1, value));
         }
 
         //Variables that belong to both factors should appear in the same order
@@ -483,29 +490,30 @@ class Factor : public VerticeObject{
             scope_type intersec_scopes = scopeIntersection(this->scope, other.scope);
             Factor left = this->marginalizeAllBut(intersec_scopes);
             Factor right = other.marginalizeAllBut(intersec_scopes);
-            for(size_t iter = 0; iter < left.cpd.size() && iter < right.cpd.size(); iter++){
-                out += pow(left.cpd[iter]*right.cpd[iter], 2);
+            for(int iter = 0; iter < left.cpd.size() && iter < right.cpd.size(); iter++){
+                out += pow(left.cpd[iter]-right.cpd[iter], 2);
             }
-            return out;
+            return pow(out, 0.5);
         }
 
         friend std::ostream& operator<<(std::ostream& os, const Factor& fact){
             scope_type::const_iterator var = fact.scope.begin();
-            os << "[< ";
+            os << "[<";
             if(var != fact.scope.end()){
                 //os << var->getName(); var++;
                 for(;var != fact.scope.end(); var++){
-                    os << " " << var->getName();
+                    os << " " << *var;
+                    //os << " " << var->getName();
                 }
             }
-            os << "> ";
+            os << " >";
             if(fact.cpd.size() > 0){
                 //os << fact.cpd[0];
-                for(unsigned int i=0; i < fact.cpd.size(); i++){
+                for(int i=0; i < fact.cpd.size(); i++){
                     os<< " " << fact.cpd[i];
                 };
             }
-            os << "]";
+            os << " ]";
             return os;
         };
 
@@ -529,6 +537,10 @@ class Factor : public VerticeObject{
             }
             scope_type scope(v_list.size());
             std::copy(v_list.begin(), v_list.end(), scope.begin());
+
+            if(scope.size() == 0){
+                throw std::invalid_argument( "Factor: invalid line to parse" + name );
+            }
 
             cpd_type cpd(d_list.size());
             std::copy(d_list.begin(), d_list.end(), cpd.begin());
@@ -556,7 +568,7 @@ class Factor : public VerticeObject{
             fact.scope = scope_type(l_vars.size());
             std::copy(l_vars.begin(), l_vars.end(), fact.scope.begin());
             fact.scope_sizes = attribution_type(fact.scope.size(), 1);
-            size_t count = 0;
+            int count = 0;
             for(scope_type::const_iterator i = fact.scope.begin();
             i != fact.scope.end(); i++, count++){
                 fact.scope_sizes[count] = i->getValues().size();
@@ -585,7 +597,7 @@ class Vertice {
         Factor factor;
         RandomVariable rVariable;
         graphlab::vertex_id_type var_id;
-        static size_t id;
+        static int id;
 
     public:
         enum {FACTOR, VARIABLE} type;
@@ -609,7 +621,7 @@ class Vertice {
             this->setMessage(tmp_fact);
         }
 
-        static size_t getTotalId(){return id;}
+        static int getTotalId(){return id;}
         VerticeObject& getInfo(){
             if(getType() == FACTOR){
                 return factor;
@@ -617,13 +629,17 @@ class Vertice {
             return rVariable;
         }
 
-        void setInfoFactor(Factor const& info){
-            factor = info;
-        }
+        RandomVariable& getInfoRandomVariable(){ return rVariable; }
 
-        void setInfoRandomVariable(RandomVariable const& info){
-            rVariable = info;
-        }
+        RandomVariable const& getInfoRandomVariable() const{ return rVariable; }
+
+        void setInfoRandomVariable(RandomVariable const& info){ rVariable = info; }
+
+        Factor& getInfoFactor(){ return factor; }
+
+        Factor const& getInfoFactor() const{ return factor; }
+
+        void setInfoFactor(Factor const& info){ factor = info; }
 
         VerticeObject const& getInfo() const{
             if(getType() == FACTOR){
@@ -642,31 +658,22 @@ class Vertice {
         inline int getType() const{ return type;}
 
         void save(graphlab::oarchive& oarc) const {
-            oarc << message << var_id << id << type;
-            if(type == FACTOR){
-                oarc << factor;
-            }else{
-                oarc << rVariable;
-            }
+            oarc << message << var_id << id << type << factor << rVariable;
         }
 
         void load(graphlab::iarchive& iarc) {
-            iarc >> message >> var_id >> id >> type;
-            if(type == FACTOR){
-                iarc >> factor;
-            }else{
-                iarc >> rVariable;
-            }
+            iarc >> message >> var_id >> id >> type >> factor>> rVariable;
         }
+
         friend inline bool operator==(const Vertice& v1, const Vertice& v2){
             return v1.vid() == v2.vid();
         }
 
         friend std::ostream& operator<<(std::ostream& os, const Vertice& vertice){
             if(vertice.getType() == FACTOR){
-                os << "FACTOR" << vertice.var_id << vertice.factor;
+                os << vertice.var_id << " Factor " << vertice.factor;
             }else{
-                os << "VARIABLE" << vertice.var_id << vertice.rVariable;
+                os << vertice.var_id << " Variable " << vertice.rVariable;
             }
             return os;
         };
@@ -682,49 +689,30 @@ class Vertice {
                         //parse factor and create factor
                         Factor fact = Factor::parseLine(ss);
                         v = Vertice(fact, id);
+                        return v;
                         //add factor vertex
                     }else{
                         if(tmp == "Variable"){
                             //parse variable and create it
                             RandomVariable var = RandomVariable::parseLine(ss);
                             v = Vertice(var, id);
+                            return v;
                             // add variable vertex
                         }
                     }
                 }
-            }else{
-                //todo error
             }
-            return v;
-        }
+            throw "[parseline] could not read vertex!!";
 
-        /*friend std::istream& operator>>(std::istream& input, Vertice& vertice){
-            std::string tmp;
-            input >> tmp;
-            if(tmp == "FACTOR"){
-                vertice.type = FACTOR;
-                input >> vertice.var_id;
-                input >> vertice.factor;
-                vertice.setMessage(vertice.factor);
-            }else{
-                if(tmp == "VARIABLE"){
-                    vertice.type = VARIABLE;
-                    input >> vertice.var_id;
-                    input >> vertice.rVariable;
-                    cpd_type tmp_cpd(vertice.rVariable.getValues().size(), 1.0);
-                    Factor tmp_fact(scope_type(1, vertice.rVariable), tmp_cpd);
-                    vertice.setMessage(tmp_fact);
-                }
-            }
-            return input;
-        };*/
+        }
 };
 
-size_t Vertice::id = 0;
+int Vertice::id = 0;
 
 typedef graphlab::distributed_graph<Vertice, graphlab::empty> GraphLab_type;
 typedef std::pair<Vertice*, Vertice*> Edge_type;
 
+//Wrapper to help make the convergence message passing process happen
 class convergence_message: public graphlab::IS_POD_TYPE{
     public:
         convergence_message():value(0.0){};
@@ -763,12 +751,12 @@ class BeliefProp : public InferenceEngine{
         Factor gather(icontext_type& context, const vertex_type& vertex,
         edge_type& edge) const {
             if(vertex.data().getType() == Vertice::FACTOR){
-                //std::cout << "gather from factor " << edge.target().data().getMessage() <<std::endl;
-                return edge.target().data().getMessage();
+                //std::cout << "gather from factor " << edge.target().data().getMessage() << edge.target().data().getInfoFactor() << std::endl;
+                return Factor();//edge.target().data().getMessage();
             }else{
                 //if(vertex.data().getType() == Vertice::VARIABLE){
                 //std::cout << "gather from variable" << edge.source().data().getMessage() << std::endl;
-                return edge.source().data().getMessage();
+                return Factor();//edge.source().data().getMessage();
                 //}
             }
         }
@@ -776,25 +764,29 @@ class BeliefProp : public InferenceEngine{
         // Use the total belief of adjacent factors to update this factor
         void apply(icontext_type& context, vertex_type& vertex,
         const gather_type& total) {
+            std::cout << "APPLY" << std::endl;
             vertex.data().iter_count++;
             if(vertex.data().getType() == Vertice::FACTOR){
-                //std::cout << "Factor Apply: Updated to:" << std::endl;
-                Vertice& fact_vert = vertex.data();
-                Factor& fact = (Factor&) fact_vert.getInfo();
-                //std::cout << "--*--" << std::endl<< std::endl << fact; std::cout << total;
-                Factor new_fact = (fact*total).marginalizeAllBut(fact.getScope());
-                //std::cout << "--*--" << std::endl;
+                std::cout << "Factor Apply: Updated to:" << std::endl;
+                Vertice fact_vert = vertex.data();
+                Factor& fact = fact_vert.getInfoFactor();
+                if(fact.getScope().size() == 0){
+                    std::cerr << "READING BLANK FACTOR!";
+                    return;
+                }
+                std::cout << std::endl << "--*--" << std::endl << fact << std::endl << total << total;
+                Factor new_fact = (fact*total);//.marginalizeAllBut(fact.getScope());
+                std::cout << "--*--" << std::endl;
                 vertex.data().setMessage(new_fact);
                 //vertex.data() = fact_vert;
-                //std::cout << vertex.data().getMessage() << std::endl;
+                std::cout << vertex.data().getMessage() << std::endl;
             }else{
                 if(vertex.data().getType() == Vertice::VARIABLE){
-                    //std::cout << "Variable Apply: Updated to:" << std::endl;
+                    std::cout << "Variable Apply: Updated to:" << std::endl;
                     Vertice& var_vert = vertex.data();
-                    RandomVariable& var = (RandomVariable&) var_vert.getInfo();
+                    RandomVariable var = (RandomVariable) var_vert.getInfoRandomVariable();
                     vertex.data().setMessage(total.marginalizeAllBut(var));
-                    //vertex.data() = var_vert;
-                    //std::cout << vertex.data().getMessage() <<std::endl;
+                    std::cout << vertex.data().getMessage() <<std::endl;
                 }
             }
         }
@@ -804,8 +796,8 @@ class BeliefProp : public InferenceEngine{
                                     const vertex_type& vertex) const {
         //    if (perform_scatter) return graphlab::OUT_EDGES;
             //else
-            //return graphlab::NO_EDGES;
-            return graphlab::ALL_EDGES;
+            return graphlab::NO_EDGES;
+            //return graphlab::ALL_EDGES;
         }
 
         void scatter(icontext_type& context, const vertex_type& vertex,
@@ -814,24 +806,24 @@ class BeliefProp : public InferenceEngine{
             vertex_type other_vertex = (isAFactor)? edge.target() : edge.source();
             cpd_type fact_cpd, var_cpd;
 
-            Factor *fact, *var;
+            Factor fact, var;
 
             if(isAFactor){
-                fact = &(Factor&) vertex.data().getInfo();
-                var = &(Factor&) edge.target().data().getMessage();
+                fact = vertex.data().getInfoFactor();
+                var = edge.target().data().getMessage();
             }else{
                 //if(vertex.data().getType() == Vertice::VARIABLE){
-                fact = &(Factor&) edge.source().data().getInfo();
-                var = &(Factor&) vertex.data().getMessage();
+                fact = edge.source().data().getInfoFactor();
+                var = vertex.data().getMessage();
                 //}
             }
 
             //std::cout << "BP: convergence: FACTOR: " << *fact << std::endl << "VAR: "<< *var << std::endl;
-            double residual = fact->distanceTo(*var);
+            double residual = fact.distanceTo(var);
             if(residual > BeliefProp::BOUND &&
                other_vertex.data().iter_count < BeliefProp::ITER_BOUND){
                 edge.source();
-                context.signal(other_vertex, residual);
+                //context.signal(other_vertex, residual);
             }
         }
     };
@@ -850,14 +842,12 @@ class EvidenceEngine{
         // Use the total to update this vertex
         static void setEvidenceForVertex(GraphLab_type::vertex_type& vertex) {
             bool isAFactor = vertex.data().getType() == Vertice::FACTOR;
-            Factor *fact;
-
             if(isAFactor){
-                fact = &(Factor&) vertex.data().getInfo();
-                vertex.data().setMessage(fact->setEvidence(variables, values));
+                Factor fact = vertex.data().getInfoFactor();
+                vertex.data().setMessage(fact.setEvidence(variables, values));
             }else{
-                fact = &(Factor&) vertex.data().getMessage();
-                vertex.data().setMessage(Factor(fact->getScope(), cpd_type(fact->getCPD().size(), 1.)));
+                Factor fact = vertex.data().getMessage();
+                vertex.data().setMessage(Factor(fact.getScope(), cpd_type(fact.getCPD().size(), 1.)));
             }
         }
 
@@ -879,13 +869,13 @@ class Graph{
                 std::stringstream sstream;
                 if(v.data().getType() == Vertice::FACTOR){
                     Vertice& fact_vert = v.data();
-                    Factor& fact = (Factor&) fact_vert.getInfo();
-                    sstream << fact << std::endl;
+                    Factor& fact = fact_vert.getInfoFactor();
+                    sstream << fact_vert.vid() << " Factor " << fact << std::endl;
                 }else{
                     if(v.data().getType() == Vertice::VARIABLE){
                         Vertice& var_vert = v.data();
-                        RandomVariable& var = (RandomVariable&) var_vert.getInfo();
-                        sstream << var << std::endl;
+                        RandomVariable& var = var_vert.getInfoRandomVariable();
+                        sstream << var_vert.vid() << " Variable " << var << std::endl;
                     }else{
                         sstream << "-*-" << std::endl;
                     }
@@ -900,7 +890,7 @@ class Graph{
             }
         };
 
-        static std::pair<size_t, size_t> parseEdge(std::stringstream& ss){
+        static std::pair<int, int> parseEdge(std::stringstream& ss){
             int idSource, idTarget;
             std::string tmp;
 
@@ -908,12 +898,10 @@ class Graph{
                 if(ss >> tmp){
                     if (tmp == "->"){
                         ss >> idTarget;
-                        return std::pair<size_t, size_t>(idSource, idTarget);
+                        return std::pair<int, int>(idSource, idTarget);
                     }
                 }
-            }else{
-                return std::pair<size_t, size_t>(-1, -1);
-            }
+            }return std::pair<int, int>(-1, -1);
         }
 
         static bool line_parser(GraphLab_type& graph, std::string const& file_name, std::string const& line){
@@ -924,7 +912,7 @@ class Graph{
             if(sstream >> tmp){
                 sstream.seekg(pos);
                 if(tmp == "->"){
-                    std::pair<size_t, size_t> edge = parseEdge(sstream);
+                    std::pair<int, int> edge = parseEdge(sstream);
                     if(edge.first == -1){
                         return false;
                     }
@@ -932,8 +920,10 @@ class Graph{
                 }else{
                     Vertice v = Vertice::parseLine(sstream);
                     graph.add_vertex(v.vid(), v);
+                    //std::cout << "Adding var" << v;
                 }
             }
+            //std::cout << "Read line";
             return true;
         }
 
@@ -958,7 +948,7 @@ class Graph{
                     fact = &v2;
                     var  =  &v1;
                     dgraph.add_edge(fact->vid(), var->vid());
-                }//TODO raise exception if it is a wrong kind of edge
+                }//TODO raise exception if it is the wrong kind of edge
             }
 
         }
@@ -984,9 +974,13 @@ class Graph{
 
         GraphLab_type& getDGraph(){ return dgraph;}
 
-        void save(){
+        void save(std::string dest_file){
             // params: destination, writer, save as .gzip, save vertex, save edges, files per machine
-            dgraph.save("/home/breno/BNETout", graph_writer(), false, true, true, 1);
+            dgraph.save(dest_file, graph_writer(), false, true, true, 1);
+        }
+
+        void save(){
+            save("/home/breno/BNETout");
         }
 
         void load(std::string prefix){
@@ -1007,16 +1001,17 @@ class Learning_Complete_Data_Engine{
     private:
         static DataSet data_set;
 
-        static Factor& absorb_data(Factor& fact, DataSet& data){
+        static void absorb_data(Factor& fact, DataSet& data){
+            //std::cout << "absorbing data - init" << std::endl;
             data_table_type::iterator element;
             data_object_type const& header = data.getHeader();
             scope_type const& scope = fact.getScope();
-            std::vector<int> scope_map(fact.getScope().size(),0);
+            std::vector<int> scope_map(scope.size(),0);
             attribution_type attrib(scope.size(),0);
-
+            //std::cout << "absorbing data - create header map" << std::endl;
             bool missing_var;
             //Map the data header to the factor scope
-            for(size_t attrib_pos = 0; attrib_pos < scope.size(); attrib_pos++){
+            for(int attrib_pos = 0; attrib_pos < scope.size(); attrib_pos++){
                 missing_var = true;
                 //std::cout << std::endl<< "Header size: " << header.size();
                 for(int map_pos = 0; map_pos < header.size(); map_pos++){
@@ -1029,42 +1024,48 @@ class Learning_Complete_Data_Engine{
                     }
                 }
                 if(missing_var){
-                    std::cerr << std::endl << "Invalid header!!"<< fact << std::endl;
+                    std::cerr << std::endl << "Invalid header!! Missing variable: "<< scope[attrib_pos].getName() << std::endl;
                     //TODO raise exception and deal with it
                 }
             }
+            //std::cout << "absorbing data - iterate through data" << std::endl;
             //Read each tuple and update the factor
             for(element = data.begin(); element != data.end(); element++){
-                for(size_t attrib_pos = 0; attrib_pos < scope.size(); attrib_pos++){
+                for(int attrib_pos = 0; attrib_pos < attrib.size(); attrib_pos++){
+
                     attrib[attrib_pos] = scope[attrib_pos].positionOfValue((*element)[scope_map[attrib_pos]]);
+                //    std::cout << "absorbing data - iterate through data - datum ";
+
                     //TODO raise an error if the value is invalid
                 }
-                fact[attrib] += 1;
-                /*std::cout << "atrib: [";
-                for(size_t attrib_pos = 0; attrib_pos < scope.size(); attrib_pos++){
-                    std::cout << attrib[attrib_pos] << ", ";
+                 /*
+                std::cout << "atrib: [";
+                for(int att_pos = 0; att_pos < scope.size(); att_pos++){
+                    std::cout << attrib[att_pos] << ", ";
                 }
-                std::cout << "\b]" << std::endl;*/
+                std::cout << "\b]" << std::endl;
+                 */
+                fact[attrib] += 1;
             }
+            //std::cout << "absorbing data - normalize" << std::endl;
             fact.normalize();
-            return fact;
+            //std::cout << "absorbing data - absorbed" << std::endl;
         }
 
     static void vertex_learn(GraphLab_type::vertex_type& vertex) {
         //std::cout << "Performing learning on a " << std::endl;
         if(vertex.data().getType() == Vertice::FACTOR){
-            //std::cout << "factor";// << (Factor&) vertex.data();
-            Vertice& fact_vert = vertex.data();
-            Factor& fact = (Factor&) fact_vert.getInfo();
+            //std::cout << "factor" <<std::endl;
+            std::cout << (Factor&) vertex.data() << std::endl;
+            Factor fact = vertex.data().getInfoFactor();
             //std::cout << std::endl << data_set;
-            fact = absorb_data(fact, data_set);
-            fact_vert.setInfoFactor(fact);
-            //std::cout << "Learned!! = " << ((Factor&) (fact_vert.getInfo()));
+            absorb_data(fact, data_set);
+            //std::cout  << "Data absorbed" << std::endl;
+            vertex.data().setInfoFactor(fact);
+            //std::cout << "Learned!! = " << vertex.data().getInfoFactor() << std::endl;
         }else{
-            //std::cout << "variable";
+            //std::cout << "variable" <<std::endl;
         }
-
-        //std::cout << std::endl;
     }
     public:
         Learning_Complete_Data_Engine(DataSet& data){data_set = data;};
@@ -1088,21 +1089,24 @@ class BeliefNetwork{
             Learning_Complete_Data_Engine l_eng(data);
             l_eng.learn(fgraph.getDGraph());
         };
+
         void learnParametersIncompleteData(DataSet& data){};
 
+        /*
         class graph_writer{
             public:
                 std::string save_vertex(GraphLab_type::vertex_type v){
                     std::stringstream sstream;
                     if(v.data().getType() == Vertice::FACTOR){
                         Vertice& fact_vert = v.data();
-                        Factor& fact = (Factor&) fact_vert.getInfo();
+                        Factor& fact = fact_vert.getInfoFactor();
                         sstream << fact.getScope()[0] << " " << fact << std::endl;
                     }
                     return sstream.str();
                 }
                 std::string save_edge(GraphLab_type::edge_type e){ return "a -> b"; }
         };
+        */
 
         class BeliefsSet{
             private:
@@ -1115,7 +1119,7 @@ class BeliefNetwork{
                     Vertice vert = vertex.data();
                     if (vert.getType() == Vertice::VARIABLE){
                         for(scope_type::iterator var = target_variables.begin(); var != target_variables.end(); var++){
-                            if(((RandomVariable&) vert.getInfo()) == *var){
+                            if(vert.getInfoRandomVariable() == *var){
                                 return true;
                             }
                         }
@@ -1137,7 +1141,7 @@ class BeliefNetwork{
                     //BeliefsSet.setBelief is a non-static-member-function, hence it has a special signature, that cannot be used in updateBeliefs()
                     if(singleton->isTarget(vertex)){
                         Vertice& v = (Vertice&) vertex.data();
-                        std::string name = ((RandomVariable&) v.getInfo()).getName();
+                        std::string name = v.getInfoRandomVariable().getName();
                         singleton->belief_map.set(name, v.getMessage());
                     }
                 }
@@ -1169,6 +1173,7 @@ class BeliefNetwork{
             fgraph.addVertice(fact);
             fgraph.addVertice(rvar);
             fgraph.addEdge(fact, rvar);
+            //std::cout << "Adding var" <<  var << std::endl;
             return BNet_vertice(fact, rvar);
         };
 
@@ -1183,10 +1188,10 @@ class BeliefNetwork{
 
         Factor infer(RandomVariable& variable){
             BeliefProp i_eng;
-            fgraph.startDGraph();
+            //fgraph.startDGraph();
             fgraph.runInference(i_eng);
             distributed_ctrl.barrier();
-            //std::cout << "Inference done" << std::endl << "Runing inference engine" << std::endl;
+            std::cout << "Inference done" << std::endl << "Getting value" << std::endl;
             BeliefsSet bs(fgraph.getDGraph(), distributed_ctrl, scope_type(1, variable));
             return bs.getBelief(variable);
             //return Factor();
@@ -1211,9 +1216,13 @@ class BeliefNetwork{
 
         //void learnStructure(DataSet data);
 
+        void save(std::string dest_file_name){
+            fgraph.save(dest_file_name);
+        }
+
         void save(){
             //fgraph.getDGraph().save("/home/breno/BNETout", graph_writer(), false, true, true, 1);
-            fgraph.save();
+            save("/home/breno/BNETout");
         }
 
         void load(std::string prefix){
@@ -1228,239 +1237,5 @@ class BeliefNetwork{
 };
 
 BeliefNetwork::BeliefsSet* BeliefNetwork::BeliefsSet::singleton = NULL;
-
-int test1(graphlab::distributed_control& dc){
-    std::vector<std::string> binary(2 ,"");
-    binary[0] = "false"; binary[1] = "true";
-
-    std::vector<std::string> triple(3 ,"");
-    triple[0] = "false"; triple[1] = "true"; triple[2] = "maybe";
-
-    std::string rain_str = std::string("rain");
-    RandomVariable rain(rain_str, binary);
-
-    scope_type scope = scope_type(1, rain);
-    cpd_type values(2, 0.0);
-    values[0] = 0.4; values[1] = 0.6;
-    Factor f1(scope, values);
-
-    std::string grass_str = std::string("grass is wet");
-    RandomVariable grass(grass_str, triple);
-
-    scope_type scope_grass = scope_type(1, grass);
-    cpd_type values_grass(3, 0.0);
-    values_grass[0] = 0.3; values_grass[1] = 0.5; values_grass[2] = 0.2;
-
-    Factor f2(scope_grass, values_grass);
-
-    scope_type scope_rain_grass = scope_type(2, rain);
-    scope_rain_grass[1] = grass;
-    cpd_type values_rain_grass(6, 0.0);
-    values_rain_grass[0] = 0.3; values_rain_grass[1] = 0.5;
-    values_rain_grass[2] = 0.1; values_rain_grass[3] = 0.1;
-    values_rain_grass[4] = 0.9; values_rain_grass[5] = 0.1;
-    Factor f3(scope_rain_grass, values_rain_grass);
-
-    Vertice v1(rain);
-    Vertice v2(grass);
-    Vertice a(f1);
-    Vertice b(f2);
-    Vertice c(f1*f2);
-    std::cout << a     << std::endl \
-    << v1    << std::endl \
-    << f2    << std::endl \
-    << f1*f2 << std::endl << (f1*f2).marginalizeAllBut(rain) << std::endl \
-    << "V1: "<< (RandomVariable&) v1.getInfo() << std::endl \
-    << "a: " << a.getMessage() <<std::endl;
-
-    Graph g(dc);
-    g.addVertice(v1);
-    g.addVertice(v2);
-    g.addVertice(a);
-    g.addVertice(b);
-    g.addVertice(c);
-    std::cout << "variables loaded" << std::endl;
-    g.addEdge(a, v1);
-    g.addEdge(b, v2);
-    g.addEdge(c, v1);
-    g.addEdge(c, v2);
-    std::cout << "edges loaded" << std::endl;
-    BeliefProp bp;
-    std::cout << "bp constructed" << std::endl;
-    g.startDGraph();
-    g.runInference(bp);
-    dc.barrier();
-
-    return 0;
-}
-
-int test2(graphlab::distributed_control& dc){
-    std::cout << "creating bn"<< std::endl;
-    BeliefProp i_eng;
-    BeliefNetwork bn(dc, &i_eng);
-    std::cout << "bn created"<< std::endl;
-
-    std::vector<std::string> binary(2 ,"");
-    binary[0] = "false"; binary[1] = "true";
-
-    std::vector<std::string> triple(3 ,"");
-    triple[0] = "false"; triple[1] = "true"; triple[2] = "maybe";
-
-    std::string rain_str = std::string("rain");
-    RandomVariable rain(rain_str, binary);
-
-    scope_type scope = scope_type(1, rain);
-    cpd_type values(2, 0.0);
-    values[0] = 0.1; values[1] = 0.1;
-    Factor f1(scope, values);
-
-    std::string grass_str = std::string("wet");
-    RandomVariable grass(grass_str, triple);
-
-    scope_type scope_rain_grass = scope_type(2, rain);
-    scope_rain_grass[0] = grass;
-    cpd_type values_rain_grass(6, 0.0);
-    //values_rain_grass[0] = 0.3; values_rain_grass[1] = 0.5;
-    //values_rain_grass[2] = 0.1; values_rain_grass[3] = 0.1;
-    //values_rain_grass[4] = 0.9; values_rain_grass[5] = 0.1;
-    Factor f2(scope_rain_grass, values_rain_grass);
-
-    std::cout << "variables created"<< std::endl;
-
-    BNet_vertice r = bn.addVariable(rain, f1);
-    BNet_vertice g = bn.addVariable(grass, f2);
-
-    std::cout << "variables inserted"<< std::endl;
-    bn.addEdge(r,g);
-    std::cout << "edge created"<< std::endl;
-
-    DataSet data("test.csv");
-    std::cout << "DATASET read" << std::endl;
-    bn.learnParameters(data);
-    std::cout << "learning done"<< std::endl;
-    bn.save();
-    std::cout << "saving done"<< std::endl;
-    std::cout << "P(wet) = " << bn.infer(grass) << std::endl;
-    return 0;
-}
-
-int test3(graphlab::distributed_control& dc){
-    dc.barrier();
-    std::cout << "creating bn"<< std::endl;
-    BeliefProp i_eng;
-    BeliefNetwork bn(dc, &i_eng);
-    std::cout << "bn created"<< std::endl;
-
-    bn.load("/home/breno/Documents/git-repos/graphlab/apps/bnets/BNETout.1_of_1");
-    bn.save();
-    std::vector<std::string> triple(3 ,"");
-    triple[0] = "false"; triple[1] = "true"; triple[2] = "maybe";
-    std::string grass_str = std::string("wet");
-    RandomVariable grass(grass_str, triple);
-
-    DataSet data("test.csv");
-    std::cout << "DATASET read" << std::endl;
-    bn.learnParameters(data);
-    std::cout << "learning done"<< std::endl;
-    //bn.save();
-    std::cout << "saving done"<< std::endl;
-    std::cout << "P(wet) = " << bn.infer(grass) << std::endl;
-    return 0;
-}
-
-int experiment1(graphlab::distributed_control& dc, std::string path, std::string net, std::string var_str, std::string data_str, std::string out_str){
-    dc.barrier();
-    std::cout << "creating bn"<< std::endl;
-    BeliefProp i_eng;
-    BeliefNetwork bn(dc, &i_eng);
-    double begin_inference, end_inference, end_learning;
-    std::stringstream var_ss(var_str);
-    RandomVariable var = RandomVariable::parseLine(var_ss);
-    //std::cout << "bn created"<< std::endl;
-
-    bn.load(path+net);
-    bn.save();
-    std::vector<std::string> triple(3 ,"");
-
-    DataSet data(path+data_str);
-    //std::cout << "DATASET read" << std::endl;
-    begin_inference = clock();
-    Factor grass_infer = bn.infer(var);
-    end_inference = clock();
-    bn.learnParameters(data);
-    end_learning = clock();
-    //std::cout << "learning done"<< std::endl;
-    //bn.save();
-    //std::cout << "saving done"<< std::endl;
-    //std::cout << "P(wet) = " << bn.infer(grass) << std::endl;
-    if(dc.procid() == 0){
-        std::cout << "times" << (end_inference - begin_inference)*1000 / CLOCKS_PER_SEC << "ms\t" <<(end_learning - end_inference) *1000/ CLOCKS_PER_SEC << "ms";
-        std::ofstream output;
-        output.open(out_str.c_str(), std::ios::out | std::ios::app);
-        output << net << "\t" << var.getName() << "\t" << dc.numprocs() << "\t" << (end_inference - begin_inference)*1000 / CLOCKS_PER_SEC << "\t" <<(end_learning - end_learning) *1000/ CLOCKS_PER_SEC << std::endl;
-        output.close();
-    }
-    return 0;
-}
-
-
-int main(int argc, char** argv){
-    graphlab::mpi_tools::init(argc, argv);
-    graphlab::distributed_control dc;
-
-    double begin, end;
-
-/*    std::cout << "test1" << std::endl;
-    begin = clock();
-    test1(dc); // Testing FactorGraph
-    end = clock();
-    std::cout << "Time Elapsed: " << (end-begin)/ CLOCKS_PER_SEC << "s." << std::endl;
-
-    std::cout << "test2" << std::endl;
-    //if you are the node 0
-    begin = clock();
-    test2(dc); // Testing BNet
-    end = clock();
-    std::cout << "Time Elapsed: " << (end-begin)/ CLOCKS_PER_SEC << "s." << std::endl;
-    //}
-
-    std::cout << "test3" << std::endl;
-    //if you are the node 0
-    begin = clock();
-    test3(dc); // Testing BNet
-    end = clock();
-    std::cout << "Time Elapsed: " << (end-begin)/ CLOCKS_PER_SEC << "s." << std::endl;
-    //} */
-
-    /*for(int i = 0; i < 100; i++){
-        experiment1(dc,
-                        "/home/breno/Documents/git-repos/graphlab/apps/bnets/samples/",
-                        "( rain |  false true )",
-                        "test.gl",
-                        "test.csv",
-                        "/home/breno/pgm_test" );
-    }*/
-
-    for(int i = 0; i < 100; i++){
-        experiment1(dc, "/home/ubuntu/graphlab/apps/bnets/samples/",
-                        "BBNet-hailfinder.gl",
-                        "P(CapInScen[LessThanAve,Average,MoreThanAve]|AMCINInScen,CapChange)",
-                        "hailfinder_500_perc30_missing_data.txt",
-                        "/home/ubuntu/pgm_test" );
-    }
-
-    for(int i = 0; i < 100; i++){
-        experiment1(dc,
-                        "/home/ubuntu/graphlab/apps/bnets/samples/",
-                        "BBNet-alarm.gl",
-                        "P(CO[Low,Normal,High]|HR,StrokeVolume)",
-                        "alarm_1000_perc30_missing_data.txt",
-                        "/home/ubuntu/pgm_test" );
-    }
-
-    std::cout << "closing mpi" << std::endl;
-    graphlab::mpi_tools::finalize();
-    std::cout << "mpi closed" << std::endl;
-}
 
 #endif //FACTOR_GRAPH_NETWORK_UTILS_HPP

@@ -52,15 +52,15 @@ private:
     bool readLine(std::ifstream& file, std::string const& separator, data_object_type& elems){
         std::string line;//, item;
         bool out = std::getline(file, line);
-        if(line.size() <= 0){
+        if(line.size() == 0){
             return false;
         }
-        std::string const line_const(line);
+        //std::string const line_const(line);
         std::vector<std::string> tokens;
-        split(line_const, separator, tokens);
+        split(line.c_str(), separator, tokens);
         for(int i = 0; i < tokens.size(); i++){
             elems.push_back(tokens[i]);
-            std::cout << "adding: " << tokens[i] << elems.size() << std::endl;
+            //std::cout << "adding: " << tokens[i] << elems.size() << std::endl;
         }
         return out;
     }
@@ -91,19 +91,30 @@ public:
             row_size = header.size();
             std::cout << "Header size: " << header.size() << std::endl;
         }
-        data_object_type line = data_object_type();;
+        data_object_type line = data_object_type();
         while(readLine(source, sep, line)){
-
-            if(row_size < 0){
-                row_size = line.size();
-            }else{
-                if(line.size() != row_size){
-                    //TODO Exception
-                    std::cerr << "error: problem in the csv file: header.size(" << header.size() << ") != line.size(" << line.size() << ")";
+            if(line.size() != 0){
+                if(row_size < 0){
+                    row_size = line.size();
+                }else{
+                    if(line.size() != row_size){
+                        //TODO Exception
+                        std::cerr << "error: problem in the csv file: header.size(" << header.size() << ") != line.size(" << line.size() << ")" << std::endl;
+                        std::cerr << "Header:"<< std::endl;
+                        for(data_object_type::const_iterator i = header.begin(); i != header.end(); i++){
+                            std::cerr << *i << " ";
+                        }
+                        std::cerr << "Line:"<< std::endl;
+                        for(data_object_type::const_iterator i = line.begin(); i != line.end(); i++){
+                            std::cerr << *i << ",";
+                        }
+                        std::cerr << std::endl;
+                        throw "problem in the csv file";
+                    }
                 }
+                data.push_back(line);
+                line = data_object_type();
             }
-            data.push_back(line);
-            line = data_object_type();
         }
         source.close();
     }

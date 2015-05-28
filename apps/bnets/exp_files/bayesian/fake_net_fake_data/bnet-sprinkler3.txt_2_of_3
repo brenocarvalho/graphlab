@@ -1,0 +1,5 @@
+04 Variable ( WetGrass | F T )
+08 Factor [< ( WetGrass | F T ) ( Rain | F T ) ( Sprinkler | F T ) > 1.0 0.1 0.1 0.001 0.0 0.9 0.9 0.99 ]
+08 -> 02
+08 -> 03
+08 -> 04

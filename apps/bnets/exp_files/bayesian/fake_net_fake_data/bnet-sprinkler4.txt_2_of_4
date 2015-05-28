@@ -1,0 +1,4 @@
+03 Variable ( Rain | F T )
+07 Factor [< ( Rain | F T ) ( Cloudy | F T ) > 0.8 0.2 0.2 0.8 ]
+07 -> 01
+07 -> 03

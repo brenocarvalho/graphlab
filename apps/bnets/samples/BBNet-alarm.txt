@@ -1,0 +1,157 @@
+00 Variable ( PAP | Low Normal High )
+01 Variable ( VentLung | Zero Low Normal High )
+02 Variable ( Disconnect | True False )
+03 Variable ( HR | Low Normal High )
+04 Variable ( MinVol | Zero Low Normal High )
+05 Variable ( ErrLowOutput | True False )
+06 Variable ( HREKG | Low Normal High )
+07 Variable ( LVFailure | True False )
+08 Variable ( CVP | Low Normal High )
+09 Variable ( LVEDVolume | Low Normal High )
+10 Variable ( KinkedTube | True False )
+11 Variable ( Intubation | Normal Esophageal OneSided )
+12 Variable ( BP | Low Normal High )
+13 Variable ( ExpCO2 | Zero Low Normal High )
+14 Variable ( MinVolSet | Low Normal High )
+15 Variable ( HRSat | Low Normal High )
+16 Variable ( VentTube | Zero Low Normal High )
+17 Variable ( ArtCO2 | Low Normal High )
+18 Variable ( StrokeVolume | Low Normal High )
+19 Variable ( PVSat | Low Normal High )
+20 Variable ( Press | Zero Low Normal High )
+21 Variable ( HRBP | Low Normal High )
+22 Variable ( Catechol | Normal High )
+23 Variable ( VentMach | Zero Low Normal High )
+24 Variable ( VentAlv | Zero Low Normal High )
+25 Variable ( CO | Low Normal High )
+26 Variable ( Shunt | Normal High )
+27 Variable ( FiO2 | Low Normal )
+28 Variable ( Hypovolemia | True False )
+29 Variable ( SaO2 | Low Normal High )
+30 Variable ( InsuffAnesth | True False )
+31 Variable ( TPR | Low Normal High )
+32 Variable ( PulmEmbolus | True False )
+33 Variable ( History | True False )
+34 Variable ( Anaphylaxis | True False )
+35 Variable ( ErrCauter | True False )
+36 Variable ( PCWP | Low Normal High )
+37 Factor [< ( ErrCauter | True False ) > 0.1 0.9]
+38 Factor [< ( CVP | Low Normal High ) ( LVEDVolume | Low Normal High ) > 0.95 0.04 0.01 0.04 0.95 0.29 0.01 0.01 0.7]
+39 Factor [< ( MinVolSet | Low Normal High ) > 0.01 0.98 0.01]
+40 Factor [< ( PAP | Low Normal High ) ( PulmEmbolus | True False ) > 0.01 0.05 0.19 0.9 0.8 0.05]
+41 Factor [< ( PulmEmbolus | True False ) > 0.01 0.99]
+42 Factor [< ( VentMach | Zero Low Normal High ) ( MinVolSet | Low Normal High ) > 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.97]
+43 Factor [< ( ArtCO2 | Low Normal High ) ( VentAlv | Zero Low Normal High ) > 0.01 0.01 0.04 0.9 0.01 0.01 0.92 0.09 0.98 0.98 0.04 0.01]
+44 Factor [< ( StrokeVolume | Low Normal High ) ( LVFailure | True False ) ( Hypovolemia | True False ) > 0.98 0.5 0.95 0.05 0.01 0.49 0.04 0.9 0.01 0.01 0.01 0.05]
+45 Factor [< ( VentTube | Zero Low Normal High ) ( VentMach | Zero Low Normal High ) ( Disconnect | True False ) > 0.97 0.97 0.97 0.01 0.97 0.01 0.97 0.01 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.97]
+46 Factor [< ( LVFailure | True False ) > 0.05 0.95]
+47 Factor [< ( VentLung | Zero Low Normal High ) ( KinkedTube | True False ) ( VentTube | Zero Low Normal High ) ( Intubation | Normal Esophageal OneSided ) > 0.97 0.97 0.97 0.95 0.97 0.95 0.4 0.97 0.5 0.3 0.97 0.3 0.97 0.97 0.97 0.01 0.97 0.01 0.01 0.97 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.03 0.01 0.03 0.58 0.01 0.48 0.68 0.01 0.68 0.01 0.01 0.01 0.97 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.97 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.97 0.01 0.97]
+48 Factor [< ( HREKG | Low Normal High ) ( HR | Low Normal High ) ( ErrCauter | True False ) > 0.333333 0.98 0.333333 0.01 0.333333 0.01 0.333333 0.01 0.333333 0.98 0.333333 0.01 0.333333 0.01 0.333333 0.01 0.333333 0.98]
+49 Factor [< ( TPR | Low Normal High ) ( Anaphylaxis | True False ) > 0.98 0.3 0.01 0.4 0.01 0.3]
+50 Factor [< ( BP | Low Normal High ) ( CO | Low Normal High ) ( TPR | Low Normal High ) > 0.98 0.98 0.3 0.98 0.1 0.05 0.9 0.05 0.01 0.01 0.01 0.6 0.01 0.85 0.4 0.09 0.2 0.09 0.01 0.01 0.1 0.01 0.05 0.55 0.01 0.75 0.9]
+51 Factor [< ( Catechol | Normal High ) ( InsuffAnesth | True False ) ( SaO2 | Low Normal High ) ( TPR | Low Normal High ) ( ArtCO2 | Low Normal High ) > 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.05 0.05 0.01 0.01 0.01 0.01 0.05 0.05 0.01 0.05 0.05 0.01 0.05 0.05 0.01 0.05 0.05 0.01 0.05 0.05 0.01 0.1 0.1 0.1 0.95 0.95 0.3 0.95 0.95 0.3 0.95 0.95 0.3 0.99 0.99 0.99 0.95 0.99 0.3 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.95 0.95 0.99 0.99 0.99 0.99 0.95 0.95 0.99 0.95 0.95 0.99 0.95 0.95 0.99 0.95 0.95 0.99 0.95 0.95 0.99 0.9 0.9 0.9 0.05 0.05 0.7 0.05 0.05 0.7 0.05 0.05 0.7 0.01 0.01 0.01 0.05 0.01 0.7]
+52 Factor [< ( Press | Zero Low Normal High ) ( KinkedTube | True False ) ( Intubation | Normal Esophageal OneSided ) ( VentTube | Zero Low Normal High ) > 0.97 0.01 0.01 0.01 0.97 0.1 0.05 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.97 0.4 0.2 0.2 0.97 0.01 0.01 0.01 0.01 0.49 0.01 0.01 0.01 0.84 0.25 0.15 0.01 0.29 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.58 0.75 0.7 0.01 0.9 0.01 0.01 0.01 0.3 0.08 0.01 0.01 0.05 0.25 0.25 0.01 0.3 0.08 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.04 0.09 0.01 0.08 0.38 0.01 0.01 0.2 0.9 0.97 0.01 0.01 0.45 0.59 0.01 0.4 0.9 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.6 0.97]
+53 Factor [< ( KinkedTube | True False ) > 0.04 0.96]
+54 Factor [< ( LVEDVolume | Low Normal High ) ( Hypovolemia | True False ) ( LVFailure | True False ) > 0.95 0.98 0.01 0.05 0.04 0.01 0.09 0.9 0.01 0.01 0.9 0.05]
+55 Factor [< ( HRSat | Low Normal High ) ( HR | Low Normal High ) ( ErrCauter | True False ) > 0.333333 0.98 0.333333 0.01 0.333333 0.01 0.333333 0.01 0.333333 0.98 0.333333 0.01 0.333333 0.01 0.333333 0.01 0.333333 0.98]
+56 Factor [< ( ErrLowOutput | True False ) > 0.05 0.95]
+57 Factor [< ( PCWP | Low Normal High ) ( LVEDVolume | Low Normal High ) > 0.95 0.04 0.01 0.04 0.95 0.04 0.01 0.01 0.95]
+58 Factor [< ( History | True False ) ( LVFailure | True False ) > 0.9 0.01 0.1 0.99]
+59 Factor [< ( FiO2 | Low Normal ) > 0.01 0.99]
+60 Factor [< ( ExpCO2 | Zero Low Normal High ) ( ArtCO2 | Low Normal High ) ( VentLung | Zero Low Normal High ) > 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.01 0.97 0.97 0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.97 0.97 0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.97 0.97 0.97]
+61 Factor [< ( CO | Low Normal High ) ( HR | Low Normal High ) ( StrokeVolume | Low Normal High ) > 0.98 0.95 0.3 0.95 0.04 0.01 0.8 0.01 0.01 0.01 0.04 0.69 0.04 0.95 0.3 0.19 0.04 0.01 0.01 0.01 0.01 0.01 0.01 0.69 0.01 0.95 0.98]
+62 Factor [< ( HRBP | Low Normal High ) ( ErrLowOutput | True False ) ( HR | Low Normal High ) > 0.98 0.4 0.3 0.98 0.01 0.01 0.01 0.59 0.4 0.01 0.98 0.01 0.01 0.01 0.3 0.01 0.01 0.98]
+63 Factor [< ( Anaphylaxis | True False ) > 0.01 0.99]
+64 Factor [< ( MinVol | Zero Low Normal High ) ( VentLung | Zero Low Normal High ) ( Intubation | Normal Esophageal OneSided ) > 0.97 0.97 0.97 0.01 0.6 0.01 0.01 0.5 0.01 0.01 0.5 0.01 0.01 0.01 0.01 0.97 0.38 0.97 0.01 0.48 0.01 0.01 0.48 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.97 0.01 0.97 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.97 0.01 0.97]
+65 Factor [< ( Hypovolemia | True False ) > 0.2 0.8]
+66 Factor [< ( HR | Low Normal High ) ( Catechol | Normal High ) > 0.1 0.01 0.89 0.09 0.01 0.9]
+67 Factor [< ( PVSat | Low Normal High ) ( VentAlv | Zero Low Normal High ) ( FiO2 | Low Normal ) > 0.98 0.98 0.98 0.98 0.95 0.01 0.95 0.01 0.01 0.01 0.01 0.01 0.04 0.95 0.04 0.01 0.01 0.01 0.01 0.01 0.01 0.04 0.01 0.98]
+68 Factor [< ( VentAlv | Zero Low Normal High ) ( Intubation | Normal Esophageal OneSided ) ( VentLung | Zero Low Normal High ) > 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.97 0.03 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.95 0.94 0.88 0.01 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.04 0.1 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.97 0.01 0.01 0.01 0.01]
+69 Factor [< ( Disconnect | True False ) > 0.05 0.95]
+70 Factor [< ( Shunt | Normal High ) ( PulmEmbolus | True False ) ( Intubation | Normal Esophageal OneSided ) > 0.1 0.1 0.01 0.95 0.95 0.05 0.9 0.9 0.99 0.05 0.05 0.95]
+71 Factor [< ( Intubation | Normal Esophageal OneSided ) > 0.92 0.03 0.05]
+72 Factor [< ( SaO2 | Low Normal High ) ( Shunt | Normal High ) ( PVSat | Low Normal High ) > 0.98 0.01 0.01 0.98 0.98 0.69 0.01 0.98 0.01 0.01 0.01 0.3 0.01 0.01 0.98 0.01 0.01 0.01]
+73 Factor [< ( InsuffAnesth | True False ) > 0.2 0.8]
+37 -> 35
+38 -> 08
+38 -> 09
+39 -> 14
+40 -> 00
+40 -> 32
+41 -> 32
+42 -> 23
+42 -> 14
+43 -> 17
+43 -> 24
+44 -> 18
+44 -> 07
+44 -> 28
+45 -> 16
+45 -> 23
+45 -> 02
+46 -> 07
+47 -> 01
+47 -> 10
+47 -> 16
+47 -> 11
+48 -> 06
+48 -> 03
+48 -> 35
+49 -> 31
+49 -> 34
+50 -> 12
+50 -> 25
+50 -> 31
+51 -> 22
+51 -> 30
+51 -> 29
+51 -> 31
+51 -> 17
+52 -> 20
+52 -> 10
+52 -> 11
+52 -> 16
+53 -> 10
+54 -> 09
+54 -> 28
+54 -> 07
+55 -> 15
+55 -> 03
+55 -> 35
+56 -> 05
+57 -> 36
+57 -> 09
+58 -> 33
+58 -> 07
+59 -> 27
+60 -> 13
+60 -> 17
+60 -> 01
+61 -> 25
+61 -> 03
+61 -> 18
+62 -> 21
+62 -> 05
+62 -> 03
+63 -> 34
+64 -> 04
+64 -> 01
+64 -> 11
+65 -> 28
+66 -> 03
+66 -> 22
+67 -> 19
+67 -> 24
+67 -> 27
+68 -> 24
+68 -> 11
+68 -> 01
+69 -> 02
+70 -> 26
+70 -> 32
+70 -> 11
+71 -> 11
+72 -> 29
+72 -> 26
+72 -> 19
+73 -> 30

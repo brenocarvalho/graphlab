@@ -1,0 +1,7 @@
+00 Factor [< ( rain | false true ) > 0.01 0.01 ]
+01 Factor [< ( wet | false true maybe ) ( rain | false true ) > 0.01 0.01 0.01 0.01 0.01 0.01 ]
+02 Variable ( wet | false true maybe )
+03 Variable ( rain | false true )
+00 -> 03
+01 -> 02
+01 -> 03
