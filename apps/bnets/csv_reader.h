@@ -77,6 +77,7 @@ public:
     data_table_type  const& getDataTable(){return data;}
 
     int getRowSize(){return row_size;}
+    int getLinesQtd(){return data.size();}
     std::string getSeparator(){return sep;}
 
     DataSet(std::string source_name, std::string separator = std::string(","), bool hasTitle = true){
@@ -89,7 +90,7 @@ public:
         if(hasTitle){
             readLine(source, sep, header);
             row_size = header.size();
-            std::cout << "Header size: " << header.size() << std::endl;
+            //std::cout << "Header size: " << header.size() << std::endl;
         }
         data_object_type line = data_object_type();
         while(readLine(source, sep, line)){
@@ -122,7 +123,7 @@ public:
     DataSet head(int max_size = 10){
         DataSet out;
         out.row_size = row_size;
-        out.sep = sep; //TODO copy it
+        out.sep = sep;
         data_table_type::const_iterator i_rows= data.begin();
         data_object_type::const_iterator i_cells;
         data_object_type tmp;
@@ -132,8 +133,8 @@ public:
             tmp.push_back(*i_cells);
         }
         out.header = tmp;
-
-        for (i_rows = data.begin(); i_rows != data.end(); ++i_rows) {
+        int to_read = (max_size > 0)? max_size : 0;
+        for (i_rows = data.begin(); (to_read--) && i_rows != data.end(); ++i_rows) {
             tmp = data_object_type();
             for (i_cells = (*i_rows).begin(); i_cells != (*i_rows).end(); ++i_cells) {
                 tmp.push_back(*i_cells);

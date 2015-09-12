@@ -96,20 +96,20 @@ Factor new_cab_factor(){
     return Factor(cab_scope, cab_cpd);
 }
 
-Factor new_db_factor(){
+Factor new_bd_factor(){
     RandomVariable B("B", values_falseTrue());
     RandomVariable D("D", values_lowMediumHigh());
-    scope_type db_scope (2, D);
+    scope_type bd_scope (2, D);
 
-    db_scope[1] = B;
-    cpd_type db_cpd(2*3, 0.0);
+    bd_scope[1] = B;
+    cpd_type bd_cpd(D.getValues().size()*B.getValues().size(), 0.0);
 
     //B = false         B = true
-    db_cpd[0] = 0.9;    db_cpd[1] = 0.1; //D = low
-    db_cpd[2] = 0.8;    db_cpd[3] = 0.2; //D = medium
-    db_cpd[4] = 0.4;    db_cpd[5] = 0.6; //D = high
+    bd_cpd[0] = 0.9;    bd_cpd[1] = 0.1; //D = low
+    bd_cpd[2] = 0.8;    bd_cpd[3] = 0.2; //D = medium
+    bd_cpd[4] = 0.4;    bd_cpd[5] = 0.6; //D = high
 
-    return Factor(db_scope, db_cpd);
+    return Factor(bd_scope, bd_cpd);
 }
 
 int aux_test_compare_factor_2_string(std::string header, Factor const& fact, std::string string){
@@ -513,20 +513,20 @@ int test_normalization(){
     Factor a_fact(a_scope,   a_cpd),
            b_fact(b_scope,   b_cpd),
            cab_fact(cab_scope, cab_cpd),
-           db_fact(db_scope,  db_cpd);
+           bd_fact(db_scope,  db_cpd);
 
     //Normalization
     a_fact.normalize(),
     b_fact.normalize(),
     cab_fact.normalize(),
-    db_fact.normalize();
+    bd_fact.normalize();
 
     int error_found = 0;
     std::string header = "TEST[normalization]: ";
     error_found += aux_test_compare_factor_2_string(header, a_fact,  "[< ( A | false true ) > 0.2 0.8 ]");
     error_found += aux_test_compare_factor_2_string(header, b_fact,  "[< ( B | false true ) > 0.4 0.6 ]");
     error_found += aux_test_compare_factor_2_string(header, cab_fact,"[< ( C | low medium high ) ( A | false true ) ( B | false true ) > 0.1 0.2 0.3 0.4 0.2 0.28 0.24 0.28 0.2 0.2 0.2 0.4 ]");
-    error_found += aux_test_compare_factor_2_string(header, db_fact, "[< ( D | low medium high ) ( B | false true ) > 0.9 0.1 0.8 0.2 0.4 0.6 ]");
+    error_found += aux_test_compare_factor_2_string(header, bd_fact, "[< ( D | low medium high ) ( B | false true ) > 0.9 0.1 0.8 0.2 0.4 0.6 ]");
 
     return error_found;
 }
@@ -543,14 +543,14 @@ int test_evidenciation(){
     Factor a_fact   = new_a_factor(),
            b_fact   = new_b_factor(),
            cab_fact = new_cab_factor(),
-           db_fact  = new_db_factor();
+           bd_fact  = new_bd_factor();
 
     int error_found = 0;
     std::string header = "TEST[evidence]: ";
     error_found += aux_test_compare_factor_2_string(header, a_fact.setEvidence(A,  "true"),  "[< ( A | false true ) > 0 1 ]");
     error_found += aux_test_compare_factor_2_string(header, b_fact.setEvidence(B,  "false"), "[< ( B | false true ) > 1 0 ]");
     error_found += aux_test_compare_factor_2_string(header, cab_fact.setEvidence(B,"false"), "[< ( C | low medium high ) ( A | false true ) ( B | false true ) > 0.25 0 0.75 0 0.454545 0 0.545455 0 0.5 0 0.5 0 ]");
-    error_found += aux_test_compare_factor_2_string(header, db_fact.setEvidence(D, "medium"),"[< ( D | low medium high ) ( B | false true ) > 0 0 0.8 0.2 0 0 ]");
+    error_found += aux_test_compare_factor_2_string(header, bd_fact.setEvidence(D, "medium"),"[< ( D | low medium high ) ( B | false true ) > 0 0 0.8 0.2 0 0 ]");
 
     return error_found;
 }
@@ -563,7 +563,7 @@ int test_marginalization(){
 
     Factor a_fact   = new_a_factor(),
            cab_fact = new_cab_factor(),
-           db_fact  = new_db_factor();
+           bd_fact  = new_bd_factor();
 
     int error_found = 0;
     std::string header = "TEST[marginalization]: ";
@@ -571,7 +571,8 @@ int test_marginalization(){
     error_found += aux_test_compare_factor_2_string(header, a_fact.marginalize(D),   "[< ( A | false true ) > 0.2 0.8 ]");
     error_found += aux_test_compare_factor_2_string(header, cab_fact.marginalize(D), "[< ( C | low medium high ) ( A | false true ) ( B | false true ) > 0.1 0.2 0.3 0.4 0.2 0.28 0.24 0.28 0.2 0.2 0.2 0.4 ]");
     error_found += aux_test_compare_factor_2_string(header, cab_fact.marginalize(B), "[< ( C | low medium high ) ( A | false true ) > 0.3 0.7 0.48 0.52 0.4 0.6 ]");
-    error_found += aux_test_compare_factor_2_string(header, db_fact.marginalize(D),  "[< ( B | false true ) > 2.1 0.9 ]");
+    error_found += aux_test_compare_factor_2_string(header, cab_fact.marginalize(B).marginalize(A), "[< ( C | low medium high ) > 1 1 1 ]");
+    error_found += aux_test_compare_factor_2_string(header, bd_fact.marginalize(D),  "[< ( B | false true ) > 2.1 0.9 ]");
 
     return error_found;
 }
@@ -583,8 +584,8 @@ int test_getUnitary(){
 }
 
 int aux_test_distance(Factor const& fact1, Factor const& fact2, double ref, double tolerance = 1e-5){
-    double fact1_2_fact2 = fact1.distanceTo(fact2),
-           fact2_2_fact1 = fact2.distanceTo(fact1);
+    double fact1_2_fact2 = fact1.distance(fact2),
+           fact2_2_fact1 = fact2.distance(fact1);
     int error_found = 0;
     if(std::abs(fact1_2_fact2 - fact2_2_fact1) > tolerance){
         std::cerr << "TEST[distance]: this distance does not respect simetry." << std::endl;
@@ -603,12 +604,13 @@ int test_distance(){
     Factor a_fact   = new_a_factor(),
            b_fact   = new_b_factor(),
            cab_fact = new_cab_factor(),
-           db_fact  = new_db_factor();
+           bd_fact  = new_bd_factor();
     int error_found = 0;
-    error_found += aux_test_distance(a_fact,  cab_fact, 1.4144964);
+    /*error_found += aux_test_distance(a_fact,  cab_fact, 1.4144964);
     error_found += aux_test_distance(b_fact,  cab_fact, 1.4322011);
-    error_found += aux_test_distance(db_fact, cab_fact, 1.2162237);
-    error_found += aux_test_distance(b_fact,  db_fact,  1.7262677);
+    error_found += aux_test_distance(bd_fact, cab_fact, 1.2162237);
+    error_found += aux_test_distance(b_fact,  bd_fact,  1.7262677);*/
+    //TODO change those test to compare same sized factors
     return error_found;
 }
 
@@ -616,14 +618,16 @@ int test_multiplication(){
     Factor a_fact   = new_a_factor(),
            b_fact   = new_b_factor(),
            cab_fact = new_cab_factor(),
-           db_fact  = new_db_factor();
+           bd_fact  = new_bd_factor();
     int error_found = 0;
     std::string header = "TEST[multiplication]: ";
     error_found += aux_test_compare_factor_2_string(header, a_fact*b_fact,    "[< ( A | false true ) ( B | false true ) > 0.08 0.12 0.32 0.48 ]");
     error_found += aux_test_compare_factor_2_string(header, b_fact*a_fact,    "[< ( B | false true ) ( A | false true ) > 0.08 0.32 0.12 0.48 ]");
-    error_found += aux_test_compare_factor_2_string(header, a_fact*db_fact,   "[< ( A | false true ) ( D | low medium high ) ( B | false true ) > 0.18 0.02 0.16 0.04 0.08 0.12 0.72 0.08 0.64 0.16 0.32 0.48 ]");
-    error_found += aux_test_compare_factor_2_string(header, b_fact*db_fact,   "[< ( B | false true ) ( D | low medium high ) > 0.36 0.32 0.16 0.06 0.12 0.36 ]");
+    error_found += aux_test_compare_factor_2_string(header, a_fact*bd_fact,   "[< ( A | false true ) ( D | low medium high ) ( B | false true ) > 0.18 0.02 0.16 0.04 0.08 0.12 0.72 0.08 0.64 0.16 0.32 0.48 ]");
+    error_found += aux_test_compare_factor_2_string(header, b_fact*bd_fact,   "[< ( B | false true ) ( D | low medium high ) > 0.36 0.32 0.16 0.06 0.12 0.36 ]");
     error_found += aux_test_compare_factor_2_string(header, a_fact*cab_fact,  "[< ( A | false true ) ( C | low medium high ) ( B | false true ) > 0.02 0.04 0.04 0.056 0.04 0.04 0.24 0.32 0.192 0.224 0.16 0.32 ]");
+
+
 
     return error_found;
 }
@@ -748,10 +752,10 @@ int bnet_load(graphlab::distributed_control& dc){
     bn.load("/home/breno/Documents/git-repos/graphlab/apps/bnets/test_files/bnet-test.txt");
     bn.save("/home/breno/Documents/git-repos/graphlab/apps/bnets/test_files/bnet-test-out.txt");
     //SEEMS OK
-    //return compare_files_ special("/home/breno/Documents/git-repos/graphlab/apps/bnets/test_files/test.csv",\
+    //return compare_files_special("/home/breno/Documents/git-repos/graphlab/apps/bnets/test_files/test.csv",\
     //                              "/home/breno/Documents/git-repos/graphlab/apps/bnets/test_files/bnet-test-out.txt");
     //std::cout << "saving done"<< std::endl;
-    return 0;
+    return 1;
 }
 
 int bnet_save(graphlab::distributed_control& dc){
@@ -807,55 +811,93 @@ int bnet_learning1(graphlab::distributed_control& dc){
     return 0;
 }
 
+int bp_1(graphlab::distributed_control& dc){
+    dc.barrier();
+    if(dc.procid() == 0){
+        std::cout << "creating bn"<< std::endl;
+    }
+    BeliefProp i_eng;
+    BeliefNetwork bn(dc, &i_eng);
+    dc.barrier();
+
+    std::string net_path = "/home/breno/Documents/git-repos/graphlab/apps/bnets/test_files/bnet-sprinkler.txt";
+    if(dc.procid() == 0){
+        std::cout << "Network path is: " << net_path;
+    }
+    bn.load(net_path);
+    bn.save();
+
+    //std::cout << "DATASET read" << std::endl;
+    if(dc.procid() == 0){
+        std::cout << "---inference---" << std::endl;
+    }
+    RandomVariable grass_var("WetGrass", values_falseTrue());
+    Factor grass_infer = bn.infer(grass_var);
+
+    if(dc.procid() == 0){
+        std::cout << grass_infer << "\t" << /*grass_var.getName() <<*/ "\t" << "Processors: " << dc.numprocs() << std::endl;
+    }
+    return 1;
+}
+
+int bp_2(graphlab::distributed_control& dc){
+    return 1;
+}
+
 int main(int argc, char** argv){
     graphlab::mpi_tools::init(argc, argv);
     graphlab::distributed_control dc;
 
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%%%TEST UNIT%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%Factor%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
-    dc.cout() << "TEST[initialization]      " << (test_factor_initialization()? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[attrib]              " << (test_attribution()          ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[scope][union]        " << (test_scope_union()          ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[scope][intersection] " << (test_scope_intersection()   ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[scope][minus]        " << (test_scope_minus()          ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[attribution][map]    " << (test_attribution_map()      ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[normalization]       " << (test_normalization()        ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[evidence]            " << (test_evidenciation()        ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[marginalization]     " << (test_marginalization()      ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[getUnitary]          " << (test_getUnitary()           ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[distance]            " << (test_distance()             ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[multiplication]      " << (test_multiplication()       ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[parseLine]           " << (test_parseLine_factor()     ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[initialization]       " << (test_factor_initialization()? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[attrib]               " << (test_attribution()          ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[scope][union]         " << (test_scope_union()          ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[scope][intersection]  " << (test_scope_intersection()   ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[scope][minus]         " << (test_scope_minus()          ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[attribution][map]     " << (test_attribution_map()      ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[normalization]        " << (test_normalization()        ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[evidence]             " << (test_evidenciation()        ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[marginalization]      " << (test_marginalization()      ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[getUnitary]           " << (test_getUnitary()           ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[distance]             " << (test_distance()             ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[multiplication]       " << (test_multiplication()       ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[parseLine]            " << (test_parseLine_factor()     ? "Error" : "OK") << std::endl;
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl << std::endl;
 
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%%%TEST UNIT%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%Random Variable%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
-    dc.cout() << "TEST[parseLine]           " << (test_parseLine_var()        ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[parseLine]            " << (test_parseLine_var()        ? "Error" : "OK") << std::endl;
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl << std::endl;
 
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%%%TEST UNIT%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%%%%Vertice%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
-    dc.cout() << "TEST[parseLine]           " << (test_parseLine_vertice()    ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[initialization]      " <<(test_vertice_initialization()? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[parseLine]            " << (test_parseLine_vertice()    ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[initialization]       " <<(test_vertice_initialization()? "Error" : "OK") << std::endl;
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl << std::endl;
-/*
+
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%%%TEST UNIT%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%Graph%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
-    dc.cout() << "TEST[initialization]      " << (graph_initialization(dc)    ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[load]                " << (graph_load(dc)              ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[save]                " << (graph_save(dc)              ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[inference]           " << (graph_inference(dc)         ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[initialization]       " << (graph_initialization(dc)    ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[load]                 " << (graph_load(dc)              ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[save]                 " << (graph_save(dc)              ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[inference]            " << (graph_inference(dc)         ? "Error" : "OK") << std::endl;
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl << std::endl;
 
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%%%TEST UNIT%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%Belief Network%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
-    dc.cout() << "TEST[initialization]      " << (bnet_initialization(dc)     ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[load]                " << (bnet_load(dc)               ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[save]                " << (bnet_save(dc)               ? "Error" : "OK") << std::endl;
-    dc.cout() << "TEST[learning comp data]  " << (bnet_learning1(dc)          ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[initialization]       " << (bnet_initialization(dc)     ? "Error" : "OK") << std::endl;
+    //dc.cout() << "TEST[load]                 " << (bnet_load(dc)               ? "Error" : "OK") << std::endl;
+    //dc.cout() << "TEST[save]                 " << (bnet_save(dc)               ? "Error" : "OK") << std::endl;
+    //dc.cout() << "TEST[learning comp data]   " << (bnet_learning1(dc)          ? "Error" : "OK") << std::endl << std::endl;
+
+    dc.cout() << "TEST[belief propagation]   " << (bp_1(dc)                    ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[inference small net]  " << (bp_2(dc)                    ? "Error" : "OK") << std::endl;
+    dc.cout() << "TEST[inference w evidence] " << (bp_2(dc)                    ? "Error" : "OK") << std::endl;
+    //dc.cout() << "TEST[learning comp data]  " << (bnet_learning1(dc)          ? "Error" : "OK") << std::endl;
     dc.cout() << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl << std::endl;
 
-*/
+
     dc.cout() << "closing mpi" << std::endl;
     graphlab::mpi_tools::finalize();
     dc.cout() << "mpi closed" << std::endl;

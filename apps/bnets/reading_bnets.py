@@ -70,11 +70,12 @@ def stractInfo(string):
         cpds[tuple(map(lambda x: x[0], vars))][pos] = float(line[-1])
 
     #thanks, return it
+    #values is a map of random variables, the key is the variable name, the value is a list of values the random variable can assume
+    #CPDs is a map where the keys are tuples of random variable names and the values are tuples of floats according to the cardinality of the variables in the scope
     return values, cpds
 
-def convert2BBNF(string_in, file_out = open("/Users/brenowcarvalho/Documents/BBNet", "w")):
+def createBBNF(vars, cpds, file_out = open("/Users/brenowcarvalho/Documents/BBNet", "w")):
     #given the variables and factors, it is time to write the file in my format
-    vars, cpds = stractInfo(string_in)
     vars_keys = vars.keys()
     cpds_keys = cpds.keys()
 
@@ -85,11 +86,16 @@ def convert2BBNF(string_in, file_out = open("/Users/brenowcarvalho/Documents/BBN
         values = " ".join(vars[vars_keys[var_count]])
         str_vars[name] = "( %s | %s )" %(name, values)
         file_out.write("%02d Variable %s\n" %(var_count, str_vars[name]))
+        #print "CREATEBBNF: %02d Variable %s\n" %(var_count, str_vars[name])
+    #print "create1"
+    file_out.flush()
 
     for cpd_count in range(len(cpds_keys)):
         #f_vars = " ".join(cpds_keys[cpd_count])
         f_vars = map(str_vars.get, cpds_keys[cpd_count])
         file_out.write("%02d Factor [< %s > %s]\n" %(cpd_count+len(vars_keys), " ".join(f_vars), " ".join(map(str,cpds[cpds_keys[cpd_count]]))))
+    #print "create2"
+    file_out.flush()
 
     len_vars = len(vars)
     for sc_count in range(len(cpds_keys)):
@@ -97,7 +103,13 @@ def convert2BBNF(string_in, file_out = open("/Users/brenowcarvalho/Documents/BBN
         for var in cpds_keys[sc_count]:
             var_id  = vars_keys.index(var)
             file_out.write("%02d -> %02d\n" %(fact_id, var_id))
-    file_out.flush()
+    file_out.flush
+    #print "create3"
+
+def convert2BBNF(string_in, file_out = open("/Users/brenowcarvalho/Documents/BBNet", "w")):
+    #given the variables and factors, it is time to write the file in my format
+    vars, cpds = stractInfo(string_in)
+    createBBNF(vars, cpds, file_out)
 
 def main(args):
     if(len(args) < 3):

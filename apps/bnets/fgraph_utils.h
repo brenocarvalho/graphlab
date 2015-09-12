@@ -20,9 +20,6 @@
 #include <iostream>
 #include <fstream>
 
-// Include the macro for each operation
-//#include <graphlab/macros_def.hpp>
-
 class VerticeObject;
 class RandomVariable;
 
@@ -212,16 +209,31 @@ class Factor : public VerticeObject{
             return out;
         }
 
-
+        /*
+        * \param scope_sizes is a list of the sizes of the variables in the cpd
+        * \param cpd is the cpd it-self
+        * \param assignment is a position assignment
+        *This method returns the value of the position determined by assignment
+        *E.g.:
+        *assignment = [ 1, 0 ]
+        *Fact AB =
+        * A | B | cpd()
+        * 0 | 0 | v0
+        * 0 | 1 | v1
+        * 1 | 0 | v2
+        * 1 | 1 | v3
+        * Thus scope_sizes = [ 2, 2 ], cpd = [ v0, v1, v2, v3 ] and the return value should be v2
+        *
+        */
         static double& getValue(attribution_type const& scope_sizes, cpd_type& cpd, attribution_type const& assignment){
             int count;
             //TODO assert assignment.size() == scope.size();
-            attribution_type::const_iterator i_assig = assignment.begin();
-            attribution_type::const_iterator i_scope = scope_sizes.begin();
+            attribution_type::const_reverse_iterator i_assig = assignment.rbegin();
+            attribution_type::const_reverse_iterator i_scope = scope_sizes.rbegin();
 
             count = *i_assig;
             i_assig++; i_scope++;
-            for(;i_assig != assignment.end() && i_scope != scope_sizes.end();
+            for(;i_assig != assignment.rend() && i_scope != scope_sizes.rend();
             i_assig++, i_scope++){
                 count = count*(*i_scope) + *i_assig;
             }
@@ -264,10 +276,114 @@ class Factor : public VerticeObject{
         }
 
         /**
+        *Returns the supremum distance between two factors
+        * returns max_i(|cpd_1[i]- cpd_2[i]|)
+        * This distance is the same of the n-distance when n tends to infinity
+        **/
+        double sup_distance(Factor const& other_fact) const{
+            double max = 0.0, tmp;
+            if(this->cpd.size() != other_fact.cpd.size()){
+                throw "Incompatible factor comparation";
+            }
+            for(int pos = 0; pos < cpd.size(); pos++){
+                tmp = std::fabs(this->cpd[pos] - other_fact.cpd[pos]);
+                max = (max > tmp)? max : tmp;
+            }
+            return max;
+        }
+
+        /**
+        *Returns the n-distance between two factors
+        * returns pow(sum(pow(|cpd_1[i]- cpd_2[i]|, n)), 1./n)
+        *n must be bigger than 0
+        **/
+        double n_distance(Factor const& other_fact, int n) const{
+            double sum = 0.0;
+            if(this->cpd.size() != other_fact.cpd.size()){
+                throw "Incompatible factor comparation";
+            }
+            if( n > 0){
+                if( n > 1){
+                    for(int pos = 0; pos < cpd.size(); pos++){
+                        sum += std::pow(std::fabs(this->cpd[pos]-other_fact.cpd[pos]), n);
+                    }
+                    return std::pow(sum, 1./n);
+                }else{
+                    //Manhattan distance
+                    for(int pos = 0; pos < cpd.size(); pos++){
+                        sum += std::fabs(this->cpd[pos]-other_fact.cpd[pos]);
+                    }
+                    return sum;
+                }
+            }//if n < 1 then n is a invalid value
+            throw "Hey, bad choice of 'n' for your n-distance, n must be bigger than 0";
+        }
+
+        /**
+        *Returns a distance between two factors, used as convergence critereon
+        **/
+        double distance(Factor const& other_fact) const{
+            return n_distance(other_fact, 2);
+            //return n_distance(other_fact, 3);
+            //return n_distance(other_fact, 4);
+            //return sup_distance(other_fact);
+        }
+
+        /**
         *Normalizes the factor towards it's first variable.
+        *This method changes the original factor
+        *E.g. this takes this factor:
+        * A | B | C | cpd()
+        * 0 | 0 | 0 | v0
+        * 0 | 0 | 1 | v1
+        * 0 | 1 | 0 | v2
+        * 0 | 1 | 1 | v3
+        * 1 | 0 | 0 | v4
+        * 1 | 0 | 1 | v5
+        * 1 | 1 | 0 | v6
+        * 1 | 1 | 1 | v7
+        * And returns this other one:
+        * A | B | C | cpd()
+        * 0 | 0 | 0 | v0/(v0+v4)
+        * 0 | 0 | 1 | v1/(v1+v5)
+        * 0 | 1 | 0 | v2/(v2+v6)
+        * 0 | 1 | 1 | v3/(v3+v7)
+        * 1 | 0 | 0 | v4/(v0+v4)
+        * 1 | 0 | 1 | v5/(v1+v5)
+        * 1 | 1 | 0 | v6/(v2+v6)
+        * 1 | 1 | 1 | v7/(v3+v7)
         **/
         void normalize(){
-            double z = 0.0;
+            if(scope.size() < 1){return;}
+            double z;
+            if(scope.size() == 1){
+                z = 0.0;
+                for(cpd_type::const_iterator iter = cpd.begin(); iter != cpd.end(); iter++){
+                    z += *iter;
+                }
+                if(z != 0){
+                    for(cpd_type::iterator iter = cpd.begin(); iter != cpd.end(); iter++){
+                        *iter /= z;
+                    }
+                }
+            }else{
+                int cpd_size, var_size, sub_cpd_size;
+                cpd_size = cpd.size();
+                var_size = scope[0].getValues().size();
+                sub_cpd_size = cpd_size / var_size;
+                for(int sec_vals_count = 0; sec_vals_count < sub_cpd_size; sec_vals_count++){
+                    z = 0.0;
+                    for(int first_val_count = 0; first_val_count < var_size; first_val_count++){
+                        z += cpd[first_val_count*sub_cpd_size + sec_vals_count];
+                    }
+                    if(std::fabs(z) > 1e-10){ // if (z==0) then do z=1
+                        for(int first_val_count = 0; first_val_count < var_size; first_val_count++){
+                            cpd[first_val_count*sub_cpd_size + sec_vals_count] /= z;
+                        }
+                    }
+                }
+            }
+            /*double z = 0.0;
             if(scope.size() < 1){return;}
             if(scope.size() == 1){
                 for(cpd_type::const_iterator iter = cpd.begin(); iter != cpd.end(); iter++){
@@ -300,6 +416,45 @@ class Factor : public VerticeObject{
                         }
                     }
                 }
+            }*/
+        }
+
+        /**
+        *Normalizes the factorin a way its elements sum to one.
+        *This method behaves like normalize() when scope.size() == 1.
+        *It always consider scope.size() as being equal to 1, no matter the actual scope.size() (as long it is bigger than 0)
+        *This method changes the original factor
+        *E.g. this takes this factor:
+        * A | B | C | cpd()
+        * 0 | 0 | 0 | v0
+        * 0 | 0 | 1 | v1
+        * 0 | 1 | 0 | v2
+        * 0 | 1 | 1 | v3
+        * 1 | 0 | 0 | v4
+        * 1 | 0 | 1 | v5
+        * 1 | 1 | 0 | v6
+        * 1 | 1 | 1 | v7
+        * And returns this other one:
+        * A | B | C | cpd()
+        * 0 | 0 | 0 | v0/(v0+v1+v2+v3+v4+v5+v6+v7)
+        * 0 | 0 | 1 | v1/(v0+v1+v2+v3+v4+v5+v6+v7)
+        * 0 | 1 | 0 | v2/(v0+v1+v2+v3+v4+v5+v6+v7)
+        * 0 | 1 | 1 | v3/(v0+v1+v2+v3+v4+v5+v6+v7)
+        * 1 | 0 | 0 | v4/(v0+v1+v2+v3+v4+v5+v6+v7)
+        * 1 | 0 | 1 | v5/(v0+v1+v2+v3+v4+v5+v6+v7)
+        * 1 | 1 | 0 | v6/(v0+v1+v2+v3+v4+v5+v6+v7)
+        * 1 | 1 | 1 | v7/(v0+v1+v2+v3+v4+v5+v6+v7)
+        **/
+        void simple_normalize(){
+            if(scope.size() < 1){return;}
+            double z;
+            for(cpd_type::const_iterator iter = cpd.begin(); iter != cpd.end(); iter++){
+                z += *iter;
+            }
+            if(z != 0){
+                for(cpd_type::iterator iter = cpd.begin(); iter != cpd.end(); iter++){
+                    *iter /= z;
+                }
             }
         }
 
@@ -325,6 +480,53 @@ class Factor : public VerticeObject{
             return const_cast<Factor&>(*this)[idx];
         }
 
+        /**
+        *Return the product of two factors.
+        *If they have the same scope each cell of one factor is multiplied by the correspondent cell of the second factor.
+        * If they have different scopes the resulting factor will have the union of the scopes and would function like a *join*.
+        *This method changes the original factor
+        *E.g. this takes this factor:
+        * A | B | C | cpd()
+        * 0 | 0 | 0 | v0
+        * 0 | 0 | 1 | v1
+        * 0 | 1 | 0 | v2
+        * 0 | 1 | 1 | v3
+        * 1 | 0 | 0 | v4
+        * 1 | 0 | 1 | v5
+        * 1 | 1 | 0 | v6
+        * 1 | 1 | 1 | v7
+        *
+        *and
+        *
+        * C | D | cpd()
+        * 0 | 0 | w0
+        * 0 | 1 | w1
+        * 1 | 0 | w2
+        * 1 | 1 | w3
+        *
+        * Their product returns:
+        * A | B | C | D | cpd()
+        * 0 | 0 | 0 | 0 | v0 * w0
+        * 0 | 0 | 0 | 1 | v0 * w1
+        * 0 | 0 | 1 | 0 | v1 * w2
+        * 0 | 0 | 1 | 1 | v1 * w3
+        * 0 | 1 | 0 | 0 | v2 * w0
+        * 0 | 1 | 0 | 1 | v2 * w1
+        * 0 | 1 | 1 | 0 | v3 * w2
+        * 0 | 1 | 1 | 1 | v3 * w3
+        * 1 | 0 | 0 | 0 | v4 * w0
+        * 1 | 0 | 0 | 1 | v4 * w1
+        * 1 | 0 | 1 | 0 | v5 * w2
+        * 1 | 0 | 1 | 1 | v5 * w3
+        * 1 | 1 | 0 | 0 | v6 * w0
+        * 1 | 1 | 0 | 1 | v6 * w1
+        * 1 | 1 | 1 | 0 | v7 * w2
+        * 1 | 1 | 1 | 1 | v7 * w3
+        *
+        *no normalization was done here
+        *
+        **/
+
         Factor& operator*=(Factor const& rhs){
             scope_type old_scope = this->scope;
             attribution_type old_scope_sizes = this->scope_sizes;
@@ -334,7 +536,7 @@ class Factor : public VerticeObject{
             this->scope_sizes = attribution_type(this->scope.size(), 1);
             int cpd_size = 1; int count = 0;
             for(scope_type::const_iterator i = this->scope.begin();
-            i != this->scope.end(); i++, count++){
+              i != this->scope.end(); i++, count++){
                 this->scope_sizes[count] = i->getValues().size();
                 cpd_size *= i->getValues().size();
             }
@@ -344,6 +546,7 @@ class Factor : public VerticeObject{
             attribution_type attrib_map_right = getAttribMap(this->scope, rhs.scope);
             count = 0;
             while(count < this->cpd.size()){
+                //This for loop updates the last value in the atributtion.
                 for(int val = 0; val < this->scope_sizes[this->scope_sizes.size()-1]; val++){
                     attrib[this->scope_sizes.size()-1] = val;
                     //multiplication
@@ -364,13 +567,14 @@ class Factor : public VerticeObject{
             return *this; // return the result by reference
         }
 
-        inline friend Factor& operator*(Factor lhs, Factor const& rhs){
+        friend Factor& operator*(Factor lhs, Factor const& rhs){
             return lhs*=rhs;
         }
 
         //created only for compatibility with graphlab::aggregator_type
         Factor operator+=(Factor const& rhs){
-            return *this;//->operator*=(rhs);
+            std::cout << std::endl << "Printing product of " << *this << "by "<< rhs << " that is " << (*this)*rhs << std::endl << std::endl;
+            return (*this) *= rhs;
         }
 
         inline Factor marginalize(RandomVariable const& var) const{
@@ -393,10 +597,12 @@ class Factor : public VerticeObject{
                 return Factor(new_scope, cpd_type(1,0.0));
             }
             int cpd_size = 1;
-            for(scope_type::const_iterator i = new_scope.begin();
-            i != new_scope.end(); i++){
-                cpd_size *= i->getValues().size();
+            for(scope_type::const_iterator scope_iterator = new_scope.begin();
+            scope_iterator != new_scope.end(); scope_iterator++){
+                cpd_size *= (int) scope_iterator->getValues().size();
+                //std::cout << *scope_iterator << " " << scope_iterator->getValues().size() << " ";
             }
+            //std::cout << " CPD_SIZE: " << cpd_size << std::endl;
             cpd_type new_cpd = cpd_type(cpd_size, 0.0);
             Factor new_factor(new_scope, new_cpd);
 
@@ -439,11 +645,11 @@ class Factor : public VerticeObject{
                 int_values[count] = vars[count].positionOfValue(values[count]);
             }
 
-            return setEvidence(vars, int_values);
+            return setEvidence(vars, int_values); // Call proper function to evidenciate
         }
 
         inline Factor setEvidence(RandomVariable const& var, std::string const& value) const{
-            return setEvidence(var, var.positionOfValue(value));
+            return setEvidence(var, var.positionOfValue(value)); // Call proper function to evidenciate
         }
 
         Factor setEvidence(scope_type const& vars, std::vector<int> const& values) const{
@@ -481,19 +687,6 @@ class Factor : public VerticeObject{
 
         Factor setEvidence(RandomVariable const& var, int const& value) const{
             return setEvidence(scope_type(1, var), std::vector<int>(1, value));
-        }
-
-        //Variables that belong to both factors should appear in the same order
-        double distanceTo(const Factor& other) const{
-            double out = 0.0;
-            //Reduce both to the same scope
-            scope_type intersec_scopes = scopeIntersection(this->scope, other.scope);
-            Factor left = this->marginalizeAllBut(intersec_scopes);
-            Factor right = other.marginalizeAllBut(intersec_scopes);
-            for(int iter = 0; iter < left.cpd.size() && iter < right.cpd.size(); iter++){
-                out += pow(left.cpd[iter]-right.cpd[iter], 2);
-            }
-            return pow(out, 0.5);
         }
 
         friend std::ostream& operator<<(std::ostream& os, const Factor& fact){
@@ -597,7 +790,7 @@ class Vertice {
         Factor factor;
         RandomVariable rVariable;
         graphlab::vertex_id_type var_id;
-        static int id;
+        static int id; // global id count
 
     public:
         enum {FACTOR, VARIABLE} type;
@@ -616,8 +809,9 @@ class Vertice {
         Vertice(RandomVariable& var, int vid = id++): var_id(vid), iter_count(0){
             type      = VARIABLE;
             rVariable = var;
-            cpd_type tmp_cpd(var.getValues().size(), 1.0);
+            cpd_type tmp_cpd(var.getValues().size(), 1);
             Factor tmp_fact(scope_type(1, var), tmp_cpd);
+            tmp_fact.normalize();
             this->setMessage(tmp_fact);
         }
 
@@ -732,9 +926,12 @@ class InferenceEngine:  public graphlab::ivertex_program<GraphLab_type, Factor, 
 };
 
 class BeliefProp : public InferenceEngine{
+    private:
+        double residual;
+
     public:
         static const double BOUND = 1e-4;
-        static const int ITER_BOUND = 10000;//TODO USE THIS TO LIMIT ITERATIONS
+        static const int ITER_BOUND = 10;//TODO USE THIS TO LIMIT ITERATIONS
 
         BeliefProp(){};
         void runInference(graphlab::distributed_control& dist_ctrl, GraphLab_type& dgraph){
@@ -752,81 +949,105 @@ class BeliefProp : public InferenceEngine{
         edge_type& edge) const {
             if(vertex.data().getType() == Vertice::FACTOR){
                 //std::cout << "gather from factor " << edge.target().data().getMessage() << edge.target().data().getInfoFactor() << std::endl;
-                return Factor();//edge.target().data().getMessage();
+                return edge.target().data().getMessage();
             }else{
-                //if(vertex.data().getType() == Vertice::VARIABLE){
+                if(vertex.data().getType() == Vertice::VARIABLE){
                 //std::cout << "gather from variable" << edge.source().data().getMessage() << std::endl;
-                return Factor();//edge.source().data().getMessage();
-                //}
+                    return edge.source().data().getMessage();
+                }else{
+                    return Factor();
+                }
             }
+            //return vertex.data().getMessage();
         }
 
-        // Use the total belief of adjacent factors to update this factor
+        // Use the total belief of adjacent factors to update its own factor
         void apply(icontext_type& context, vertex_type& vertex,
         const gather_type& total) {
             std::cout << "APPLY" << std::endl;
             vertex.data().iter_count++;
+            Factor received = total;
+            received.normalize();
+
             if(vertex.data().getType() == Vertice::FACTOR){
-                std::cout << "Factor Apply: Updated to:" << std::endl;
                 Vertice fact_vert = vertex.data();
-                Factor& fact = fact_vert.getInfoFactor();
+                Factor fact = fact_vert.getInfoFactor();
                 if(fact.getScope().size() == 0){
-                    std::cerr << "READING BLANK FACTOR!";
-                    return;
+                    throw "READING BLANK FACTOR!";
                 }
-                std::cout << std::endl << "--*--" << std::endl << fact << std::endl << total << total;
-                Factor new_fact = (fact*total);//.marginalizeAllBut(fact.getScope());
-                std::cout << "--*--" << std::endl;
-                vertex.data().setMessage(new_fact);
-                //vertex.data() = fact_vert;
-                std::cout << vertex.data().getMessage() << std::endl;
+                Factor new_msg = (fact_vert.getMessage()*received).marginalizeAllBut(fact.getScope());
+                //new_msg.normalize();
+
+                std::cout
+                << "Factor " << fact << std::endl
+                << "    total : " << total << std::endl
+                << "    received message " << received.marginalizeAllBut(fact.getScope()) << std::endl
+                << "    sent message " << vertex.data().getMessage() << std::endl;
+
+                residual = new_msg.distance(received);
+                vertex.data().setMessage(new_msg);
+
+                std::cout
+                << "BP: convergence: " << std::endl
+                << "Distance(fact, var) = " << residual << std::endl
+                << "Bound = " << BeliefProp::BOUND << std::endl
+                << "--*--" << std::endl << std::endl;
+
+                if((residual > BeliefProp::BOUND) &&
+                    (vertex.data().iter_count < BeliefProp::ITER_BOUND)){
+                    context.signal(vertex, residual);
+                }
             }else{
                 if(vertex.data().getType() == Vertice::VARIABLE){
-                    std::cout << "Variable Apply: Updated to:" << std::endl;
+
                     Vertice& var_vert = vertex.data();
                     RandomVariable var = (RandomVariable) var_vert.getInfoRandomVariable();
-                    vertex.data().setMessage(total.marginalizeAllBut(var));
-                    std::cout << vertex.data().getMessage() <<std::endl;
+                    Factor old_msg = vertex.data().getMessage();
+                    Factor new_msg = (old_msg*received).marginalizeAllBut(var);
+                    //new_msg.normalize();
+
+                    std::cout
+                    << "Variable " << var << std::endl
+                    << "    total : " << total << std::endl
+                    << "    received message " << received.marginalizeAllBut(var) << std::endl
+                    << "    sent message " << old_msg << std::endl;
+
+                    residual = new_msg.distance(old_msg);
+                    vertex.data().setMessage(new_msg);
+
+                    std::cout
+                    << "BP: convergence: " << std::endl
+                    << "Distance(fact, var)= " << residual << std::endl
+                    << "Bound = " << BeliefProp::BOUND << std::endl
+                    << "--*--" << std::endl << std::endl;
+                    /*if((residual > BeliefProp::BOUND) &&
+                        (vertex.data().iter_count < BeliefProp::ITER_BOUND)){
+                        context.signal(vertex, residual);
+                    }*/
                 }
             }
         }
+
         //TODO finish bp
-        // The scatter edges depend on whether the pagerank has converged
+        // The scatter edges depend on whether it has converged
         edge_dir_type scatter_edges(icontext_type& context,
                                     const vertex_type& vertex) const {
-        //    if (perform_scatter) return graphlab::OUT_EDGES;
-            //else
-            return graphlab::NO_EDGES;
-            //return graphlab::ALL_EDGES;
+            if (residual > BeliefProp::BOUND && vertex.data().iter_count < BeliefProp::ITER_BOUND){
+                return graphlab::ALL_EDGES;
+            }
+            else{
+                return graphlab::NO_EDGES;
+            }
         }
 
         void scatter(icontext_type& context, const vertex_type& vertex,
                      edge_type& edge) const {
-            bool isAFactor = vertex.data().getType() == Vertice::FACTOR;
-            vertex_type other_vertex = (isAFactor)? edge.target() : edge.source();
-            cpd_type fact_cpd, var_cpd;
-
-            Factor fact, var;
-
-            if(isAFactor){
-                fact = vertex.data().getInfoFactor();
-                var = edge.target().data().getMessage();
-            }else{
-                //if(vertex.data().getType() == Vertice::VARIABLE){
-                fact = edge.source().data().getInfoFactor();
-                var = vertex.data().getMessage();
-                //}
-            }
-
-            //std::cout << "BP: convergence: FACTOR: " << *fact << std::endl << "VAR: "<< *var << std::endl;
-            double residual = fact.distanceTo(var);
-            if(residual > BeliefProp::BOUND &&
-               other_vertex.data().iter_count < BeliefProp::ITER_BOUND){
-                edge.source();
-                //context.signal(other_vertex, residual);
-            }
+            //bool isAFactor = vertex.data().getType() == Vertice::FACTOR;
+            //vertex_type other_vertex = (isAFactor)? edge.target() : edge.source();
+            context.signal(edge.source());
+            context.signal(edge.target());
         }
-    };
+};
 
 class EvidenceEngine{
     private:
@@ -864,30 +1085,30 @@ class Graph{
         bool dgraph_done;
 
         class graph_writer{
-        public:
-            std::string save_vertex(GraphLab_type::vertex_type v){
-                std::stringstream sstream;
-                if(v.data().getType() == Vertice::FACTOR){
-                    Vertice& fact_vert = v.data();
-                    Factor& fact = fact_vert.getInfoFactor();
-                    sstream << fact_vert.vid() << " Factor " << fact << std::endl;
-                }else{
-                    if(v.data().getType() == Vertice::VARIABLE){
-                        Vertice& var_vert = v.data();
-                        RandomVariable& var = var_vert.getInfoRandomVariable();
-                        sstream << var_vert.vid() << " Variable " << var << std::endl;
+            public:
+                std::string save_vertex(GraphLab_type::vertex_type v){
+                    std::stringstream sstream;
+                    if(v.data().getType() == Vertice::FACTOR){
+                        Vertice& fact_vert = v.data();
+                        Factor& fact = fact_vert.getInfoFactor();
+                        sstream << fact_vert.vid() << " Factor " << fact << std::endl;
                     }else{
-                        sstream << "-*-" << std::endl;
+                        if(v.data().getType() == Vertice::VARIABLE){
+                            Vertice& var_vert = v.data();
+                            RandomVariable& var = var_vert.getInfoRandomVariable();
+                            sstream << var_vert.vid() << " Variable " << var << std::endl;
+                        }else{
+                            sstream << "-*-" << std::endl;
+                        }
                     }
+                    return sstream.str();
                 }
-                return sstream.str();
-            }
 
-            std::string save_edge(GraphLab_type::edge_type e){
-                std::stringstream sstream;
-                sstream << e.source().data().vid() << " -> " << e.target().data().vid() << std::endl;
-                return sstream.str();
-            }
+                std::string save_edge(GraphLab_type::edge_type e){
+                    std::stringstream sstream;
+                    sstream << e.source().data().vid() << " -> " << e.target().data().vid() << std::endl;
+                    return sstream.str();
+                }
         };
 
         static std::pair<int, int> parseEdge(std::stringstream& ss){
@@ -1127,18 +1348,11 @@ class BeliefNetwork{
                     return false;
                 }
 
-                /*void setBelief(GraphLab_type::vertex_type& vertex){
-                    if(isTarget(vertex)){
-                        Vertice& v = (Vertice&) vertex.data();
-                        std::string name = ((RandomVariable&) v.getInfo()).getName();
-                        belief_map.set(name, v.getMessage());
-                    }
-                }*/
-
                 static void setBelief(GraphLab_type::vertex_type& vertex){
                     //The reason why this function uses the singleton pointer is described here
                     // http://stackoverflow.com/questions/15841338/c-unresolved-overloaded-function-type
                     //BeliefsSet.setBelief is a non-static-member-function, hence it has a special signature, that cannot be used in updateBeliefs()
+
                     if(singleton->isTarget(vertex)){
                         Vertice& v = (Vertice&) vertex.data();
                         std::string name = v.getInfoRandomVariable().getName();
@@ -1147,9 +1361,8 @@ class BeliefNetwork{
                 }
 
             public:
-                BeliefsSet(GraphLab_type& g,
-                                graphlab::distributed_control& d_ctrl,
-                                scope_type const& target): graph(g), target_variables(target), belief_map(d_ctrl){
+                BeliefsSet(GraphLab_type& g, graphlab::distributed_control& d_ctrl, scope_type const& target):
+                           graph(g), target_variables(target), belief_map(d_ctrl){
                     singleton = this;
                     d_ctrl.barrier();
                     updateBeliefs();
@@ -1222,18 +1435,13 @@ class BeliefNetwork{
 
         void save(){
             //fgraph.getDGraph().save("/home/breno/BNETout", graph_writer(), false, true, true, 1);
-            save("/home/breno/BNETout");
+            fgraph.save("/home/breno/BNETout");
         }
 
         void load(std::string prefix){
             fgraph.load(prefix);
             distributed_ctrl.barrier();
         }
-
-        /*friend std::ostream& operator<<(std::ostream& os, const BeliefNetwork& bnet){
-            os << "Bnet<" << bnet.fgraph << ">";
-            return os;
-        }*/
 };
 
 BeliefNetwork::BeliefsSet* BeliefNetwork::BeliefsSet::singleton = NULL;
